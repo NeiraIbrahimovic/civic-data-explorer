@@ -3,8 +3,13 @@ import edu.upenn.cit594.util.CovidData;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.ParseException;
 
-public class JSONDataFileReader {
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.*;
+
+public class JSONDataFileReader extends CovidFileReader {
     public JSONDataFileReader(String fileName) throws IOException, ParseException {
         readFile(fileName);
     }
@@ -18,7 +23,7 @@ public class JSONDataFileReader {
         //try to make sure the file can be parse
         try {
             obj = new JSONParser().parse(new FileReader(fileName));
-        } catch (ParseException e) {
+        } catch (org.json.simple.parser.ParseException e) {
             throw new RuntimeException(e);
         }
         JSONArray jo = (JSONArray) obj;
@@ -31,8 +36,8 @@ public class JSONDataFileReader {
             int partially_vaccinated = (int) jsonObj.get("partially_vaccinated");
             int fully_vaccinated = (int) jsonObj.get("fully_vaccinated");
 
-            
-            tweets.add(new TweetInfo(text, latitude, longitude));
+
+            covid_data.add(new CovidData(zip_code, etl_timestamp, partially_vaccinated, fully_vaccinated));
         }
     }
 }
