@@ -16,6 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Main {
+	//testing
 	public static void main(String[] args) {
 		// only arg that matches following will work
 		Set<String> validArgNames = Set.of("covid", "properties", "population", "log");
