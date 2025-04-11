@@ -31,13 +31,36 @@ public class JSONDataFileReader extends CovidFileReader {
         for (Object jsonElement : jo) {
             JSONObject jsonObj = (JSONObject) jsonElement;
 
-            String zip_code = (String) jsonObj.get("zip_code");
-            String etl_timestamp = (String) jsonObj.get("etl_timestamp");
-            int partially_vaccinated = (int) jsonObj.get("partially_vaccinated");
-            int fully_vaccinated = (int) jsonObj.get("fully_vaccinated");
+            String zip_code = String.valueOf(jsonObj.get("zip_code"));
+            String etl_timestamp = String.valueOf(jsonObj.get("etl_timestamp"));
+
+            // ignore row if zip is not 5 digit
+            if (zip_code == null || !zip_code.matches("^\\d{5}$")) {
+                continue;
+            }
+            // ignore row if timestamp is not YYYY-MM-DD hh:mm:ss format
+            if (etl_timestamp == null || !etl_timestamp.matches("^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$")) {
+                continue;
+            }
+
+            int partially_vaccinated = 0;
+            Object partiallyObj = jsonObj.get("partially_vaccinated");
+            if (partiallyObj instanceof Number) {
+                partially_vaccinated = ((Number) partiallyObj).intValue();
+            }
+
+            int fully_vaccinated = 0;
+            Object fullyObj = jsonObj.get("fully_vaccinated");
+            if (fullyObj instanceof Number) {
+                fully_vaccinated = ((Number) fullyObj).intValue();
+            }
 
 
             covid_data.add(new CovidData(zip_code, etl_timestamp, partially_vaccinated, fully_vaccinated));
         }
+        // uncomment this to show the entire covid_data read files.
+//        for (CovidData data : covid_data) {
+//            System.out.println(data);
+//        }
     }
 }
