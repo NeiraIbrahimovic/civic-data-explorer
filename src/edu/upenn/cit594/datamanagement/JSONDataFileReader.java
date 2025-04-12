@@ -18,6 +18,8 @@ public class JSONDataFileReader extends CovidFileReader {
 
     @Override
     protected void readFile(String fileName) throws IOException {
+        int num_partially_vaccinated_error =0;
+        int num_fully_vaccinated_error =0;
 
         Object obj = null;
         //try to make sure the file can be parse
@@ -31,11 +33,11 @@ public class JSONDataFileReader extends CovidFileReader {
         for (Object jsonElement : jo) {
             JSONObject jsonObj = (JSONObject) jsonElement;
 
-            String zip_code = String.valueOf(jsonObj.get("zip_code"));
+            String zip_code_covid = String.valueOf(jsonObj.get("zip_code"));
             String etl_timestamp = String.valueOf(jsonObj.get("etl_timestamp"));
 
             // ignore row if zip is not 5 digit
-            if (zip_code == null || !zip_code.matches("^\\d{5}$")) {
+            if (zip_code_covid == null || !zip_code_covid.matches("^\\d{5}$")) {
                 continue;
             }
             // ignore row if timestamp is not YYYY-MM-DD hh:mm:ss format
@@ -47,17 +49,28 @@ public class JSONDataFileReader extends CovidFileReader {
             Object partiallyObj = jsonObj.get("partially_vaccinated");
             if (partiallyObj instanceof Number) {
                 partially_vaccinated = ((Number) partiallyObj).intValue();
+            }else{
+                num_partially_vaccinated_error++;
             }
 
             int fully_vaccinated = 0;
             Object fullyObj = jsonObj.get("fully_vaccinated");
             if (fullyObj instanceof Number) {
                 fully_vaccinated = ((Number) fullyObj).intValue();
+            }else{
+                num_fully_vaccinated_error++;
             }
 
 
-            covid_data.add(new CovidData(zip_code, etl_timestamp, partially_vaccinated, fully_vaccinated));
+            covid_data.add(new CovidData(zip_code_covid, etl_timestamp, partially_vaccinated, fully_vaccinated));
         }
+
+        //uncomment to see the size that it read in after all the filter
+        System.out.println("size "+covid_data.size());
+        System.out.println("partially_vaccinated_error " + num_partially_vaccinated_error);
+        System.out.println("fully_vaccinated_error" + num_fully_vaccinated_error);
+
+
         // uncomment this to show the entire covid_data read files.
 //        for (CovidData data : covid_data) {
 //            System.out.println(data);
