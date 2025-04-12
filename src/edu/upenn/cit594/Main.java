@@ -1,9 +1,6 @@
 package edu.upenn.cit594;
 
-import edu.upenn.cit594.datamanagement.CSVDataFileReader;
-import edu.upenn.cit594.datamanagement.CovidFileReader;
-import edu.upenn.cit594.datamanagement.JSONDataFileReader;
-import edu.upenn.cit594.datamanagement.PropertyFileReader;
+import edu.upenn.cit594.datamanagement.*;
 import edu.upenn.cit594.ui.MainMenu;
 import edu.upenn.cit594.util.ScannerManager;
 
@@ -70,6 +67,7 @@ public class Main {
 		Scanner scanner = ScannerManager.getScanner();
 
 		//----------parsing in data---------------//
+		//parse covid data
 		CovidFileReader covidFileReader = null;
 		if(covidFile.toLowerCase().endsWith(".json")){
 			File file = new File(covidFile);
@@ -103,7 +101,7 @@ public class Main {
 				System.out.println("error parsing file");
 			}
 		}
-
+//parse properties
 		if(propertiesFile.toLowerCase().endsWith(".csv")){
 
 			PropertyFileReader propertyFileReader = null;
@@ -121,6 +119,25 @@ public class Main {
 				System.out.println("error parsing file");
 			}
 		}
+//parse population
+		if(populationFile.toLowerCase().endsWith(".csv")){
+			PopulationFileReader populationFileReader = null;
+			File file = new File(propertiesFile);
+			if(!file.exists() || !file.canRead()){
+				System.out.println("Error: properties File Not Found: " + covidFile);
+				return;
+			}
+			try{
+				System.out.println("propertiesFile: "+propertiesFile);
+				populationFileReader = new PopulationFileReader(populationFile);
+			} catch (IOException e) {
+				System.out.println("error reading file");
+			} catch (ParseException e) {
+				System.out.println("error parsing file");
+			}
+		}
+//check if log file is good.
+
 
 		//-----------go through the main menu-----------------//
 		while(true) {

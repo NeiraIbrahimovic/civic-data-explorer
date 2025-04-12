@@ -114,9 +114,9 @@ public class CSVDataFileReader extends CovidFileReader{
             }
         }
         //uncomment to see the size that it read in after all the filter
-        System.out.println("size: "+getCovid_data_readin().size());
-        System.out.println("partially_vaccinated_error: " + num_partially_vaccinated_error);
-        System.out.println("fully_vaccinated_error: " + num_fully_vaccinated_error);
+//        System.out.println("size: "+getCovid_data_readin().size());
+//        System.out.println("partially_vaccinated_error: " + num_partially_vaccinated_error);
+//        System.out.println("fully_vaccinated_error: " + num_fully_vaccinated_error);
 
     }
     public List<CovidData> getCovid_data_readin() {return covid_data_readin;}

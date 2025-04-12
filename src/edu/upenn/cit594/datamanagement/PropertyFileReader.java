@@ -60,7 +60,7 @@ public class PropertyFileReader {
                     zip_code_property = zip_code_property.substring(0, 5);
 
                 } else {
-
+                    continue;
                     //System.out.println("First 5 characters are NOT all digits." + zip_code_property+ "  " );
                 }
 
