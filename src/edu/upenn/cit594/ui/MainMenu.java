@@ -3,7 +3,7 @@ package edu.upenn.cit594.ui;
 import java.util.Scanner;
 
 public class MainMenu {
-    public static final Scanner scanner = new Scanner(System.in);
+
     public static int mainMenu(Scanner scanner) {
         while (true) {
             printMenu();

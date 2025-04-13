@@ -2,6 +2,8 @@ package edu.upenn.cit594;
 
 import edu.upenn.cit594.datamanagement.*;
 import edu.upenn.cit594.ui.MainMenu;
+import edu.upenn.cit594.ui.TotalPopulationForAllZip;
+import edu.upenn.cit594.util.MathUtils;
 import edu.upenn.cit594.util.ScannerManager;
 
 import java.io.File;
@@ -16,6 +18,9 @@ import java.util.regex.Pattern;
 
 public class Main {
 	//testing
+	static PopulationFileReader populationFileReader = null;
+	static CovidFileReader covidFileReader = null;
+	static PropertyFileReader propertyFileReader = null;
 	public static void main(String[] args) {
 		// only arg that matches following will work
 		Set<String> validArgNames = Set.of("covid", "properties", "population", "log");
@@ -68,7 +73,7 @@ public class Main {
 
 		//----------parsing in data---------------//
 		//parse covid data
-		CovidFileReader covidFileReader = null;
+
 		if(covidFile.toLowerCase().endsWith(".json")){
 			File file = new File(covidFile);
 			if(!file.exists() || !file.canRead()){
@@ -104,14 +109,16 @@ public class Main {
 //parse properties
 		if(propertiesFile.toLowerCase().endsWith(".csv")){
 
-			PropertyFileReader propertyFileReader = null;
+
 			File file = new File(propertiesFile);
 			if(!file.exists() || !file.canRead()){
 				System.out.println("Error: properties File Not Found: " + covidFile);
 				return;
 			}
 			try{
+
 				System.out.println("propertiesFile: "+propertiesFile);
+				// will read in in this order: market_value,  total_livable_area,  zip_code_property
 				propertyFileReader = new PropertyFileReader(propertiesFile);
 			} catch (IOException e) {
 				System.out.println("error reading file");
@@ -121,7 +128,7 @@ public class Main {
 		}
 //parse population
 		if(populationFile.toLowerCase().endsWith(".csv")){
-			PopulationFileReader populationFileReader = null;
+
 			File file = new File(propertiesFile);
 			if(!file.exists() || !file.canRead()){
 				System.out.println("Error: properties File Not Found: " + covidFile);
@@ -129,6 +136,7 @@ public class Main {
 			}
 			try{
 				System.out.println("propertiesFile: "+propertiesFile);
+				// will read in in this order: zip_code_population,  population
 				populationFileReader = new PopulationFileReader(populationFile);
 			} catch (IOException e) {
 				System.out.println("error reading file");
@@ -152,18 +160,24 @@ public class Main {
 					break;
 				case 2:
 					//Show total population
+					int totalPopulation = MathUtils.getTotalPopulationAllZipCode(populationFileReader.getPopulation_data_readin());
+					System.out.println("Total Population: " + totalPopulation);
 					break;
 				case 3:
 					//Show vaccinations per capita
 					break;
 				case 4:
 					//Show average market value for ZIP
+					int avgMarketValue = MathUtils.getAvgMarketValue(propertyFileReader.getProperties_data_readin(),scanner);
+					System.out.println("avgMarketValue: " + avgMarketValue);
 					break;
 				case 5:
 					//Show average livable area for ZIP
 					break;
 				case 6:
 					//Show total market value per capita
+					int totalMarketValuePerCapita = MathUtils.gettotalMarketValuePerCapita(propertyFileReader.getProperties_data_readin(),populationFileReader.getPopulation_data_readin(), scanner);
+					System.out.println("totalMarketValuePerCapita: " + totalMarketValuePerCapita);
 					break;
 				case 7:
 					//Custom feature

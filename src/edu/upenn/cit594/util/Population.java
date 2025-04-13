@@ -8,7 +8,7 @@ public class Population {
         this.population = population;
 
     }
-    public double getpopulation() {
+    public int getPopulation() {
         return population;
     }
     public String getZip_code() {
