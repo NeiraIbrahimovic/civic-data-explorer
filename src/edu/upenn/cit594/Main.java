@@ -67,7 +67,7 @@ public class Main {
         
         //Initialize processors and UI action handlers for the features
         ProcessorVaccinationStats vaccStats = new ProcessorVaccinationStats(covidMap, popMap);
-        ProcessorPopulationStats popStats = new ProcessorPopulationStats(populationFileReader.getPopulationData());
+        ProcessorPopulationStats popStats = new ProcessorPopulationStats(populationFileReader);
         ProcessorPropertyStats propStats = new ProcessorPropertyStats(propertyFileReader);
         ZipCodeDataAggregator aggregator = new ZipCodeDataAggregator(covidFileReader, propertyFileReader, populationFileReader);
 

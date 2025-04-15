@@ -1,5 +1,6 @@
 package edu.upenn.cit594.processor;
 
+import edu.upenn.cit594.datamanagement.PopulationFileReader;
 import edu.upenn.cit594.util.Population;
 
 import java.util.List;
@@ -12,11 +13,11 @@ public class ProcessorPopulationStats {
     private List<Population> populationList;
 
     /**
-     * Constructor to initialize the processor with parsed population data.
-     * @param populationList list of population records
+     * Constructor that takes a file reader and loads the population list.
+     * @param reader the file reader that provides population data
      */
-    public ProcessorPopulationStats(List<Population> populationList) {
-        this.populationList = populationList;
+    public ProcessorPopulationStats(PopulationFileReader reader) {
+        this.populationList = reader.getPopulationData();
     }
 
     /**
