@@ -12,19 +12,43 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Reads and parses a CSV file containing ZIP code population data.
+ * The file is expected to have a header with "zip_code" and "population" columns.
+ */
 public class PopulationFileReader {
-    private List<Population> population_data_readin = new ArrayList<>();
+	
+	//List to store successfully parsed population records
+    private List<Population> populationDataReadin = new ArrayList<>();
+    
+    //Temporary holders for values as we read each line
     private int population;
-    private String zip_code_population;
-    int population_index=-1;
-    int zip_code_population_index =-1;
+    private String zipCodePopulation;
+    
+    //Column indices for the headers
+    int populationIndex = -1;
+    int zipCodePopulationIndex = -1;
+    
+    /**
+     * Constructor that reads and parses the given CSV file immediately.
+     *
+     * @param fileName full path to the population data file
+     * @throws IOException if file reading fails
+     * @throws ParseException if parsing fails (not heavily used here)
+     */
     public PopulationFileReader(String fileName) throws IOException, ParseException {
         readFile(fileName);
     }
+    
+    /**
+     * Reads the CSV file and extracts ZIP code + population data.
+     * Skips malformed or invalid rows.
+     */
     private void readFile(String fileName) throws IOException, ParseException {
 
         List<String> fileContents = Files.readAllLines(Path.of(fileName));
         if (!fileContents.isEmpty()) {
+        	//Parse header line to determine column indices
             String headerLine = fileContents.get(0);
 
             String[] headers = headerLine.split(",");
@@ -33,54 +57,56 @@ public class PopulationFileReader {
                 String header = headers[i].trim();
                 header = header.replace("\"", "");
                 if (header.compareTo("population")==0) {
-                    population_index = i;
-                }else if (header.compareTo("zip_code")==0) {
-                    zip_code_population_index = i;
+                    populationIndex = i;
+                }else if (header.compareTo("zipCode")==0) {
+                    zipCodePopulationIndex = i;
                 }
 
             }
-
-
-            System.out.println("population_index: "+population_index);
-            System.out.println("zip_code_population_index: "+zip_code_population_index);
+            //Debug prints (can remove)
+            //System.out.println("populationIndex: " + populationIndex);
+            //System.out.println("zipCodePopulationIndex: " + zipCodePopulationIndex);
         }
         boolean headerline = true;
 
-        for (String line : fileContents) {  // Read each line
+        //Read data lines one by one
+        for (String line : fileContents) {  
             if (headerline) {
-                headerline = false;  // Skip the first line
-                continue;  // Skip the rest of the loop body for the first iteration
+            	//Skip the header line
+                headerline = false;  
+                continue;  
             }
 
             try {
 
-                String[] sections = line.split(","); // Split by comma
-                zip_code_population = sections[zip_code_population_index].trim().replace("\"", "");;
+                String[] sections = line.split(","); //Split by comma
+                
+                //Extract and clean the ZIP code
+                zipCodePopulation = sections[zipCodePopulationIndex].trim().replace("\"", "");;
 
-                if (zip_code_population.matches("^\\d{5}$")) {
+                if (zipCodePopulation.matches("^\\d{5}$")) {
 
-                    zip_code_population = zip_code_population.substring(0, 5);
+                    zipCodePopulation = zipCodePopulation.substring(0, 5);
 
                 } else {
-                    System.out.println("Not exactly 5 digit. " + zip_code_population );
+                    System.out.println("Not exactly 5 digit. " + zipCodePopulation );
                     continue;
                 }
 
-
-                if(!sections[population_index].trim().isEmpty()){
+                //Extract population value (or default to 0)
+                if(!sections[populationIndex].trim().isEmpty()){
                     try {
-
-                        population = Integer.valueOf(sections[population_index].trim());
+                        population = Integer.valueOf(sections[populationIndex].trim());
                     } catch (NumberFormatException e) {
-                        System.out.println("error not populatione to int- " + sections[population_index]);
-                        continue;//dont add this row if total libable aread is incorrect.
+                        System.out.println("error not populatione to int- " + sections[populationIndex]);
+                        continue;//Skip this row if total livable area is incorrect.
                     }
-                }else{
+                } else{
                     population = 0;
                 }
 
-
-                population_data_readin.add(new Population( zip_code_population,  population));
+                //Add parsed data to the list
+                populationDataReadin.add(new Population( zipCodePopulation,  population));
 
             } catch (NumberFormatException e) {
                 System.out.println("Error parsing");
@@ -88,14 +114,36 @@ public class PopulationFileReader {
                 System.out.println("Unexpected error parsing line");
             }
         }
-        //uncomment to see the size that it read in after all the filter
-        // System.out.println(getProperties_data_readin());
-//        System.out.println("total i: " + i);
-        System.out.println("Properties size: "+getPopulation_data_readin().size());
-
-
+        // Optional debug output: uncomment to see the size that it read in after all the filter
+        // System.out.println(getPropertyData());
+        // System.out.println("total i: " + i);
+        // System.out.println("Properties size: " + getPropertyData().size());
     }
-    public List<Population> getPopulation_data_readin() {return population_data_readin;}
+    
+    /**
+     * Returns the list of all population records that were parsed from the file.
+     *
+     * @return a list of Population objects
+     */
+    public List<Population> getPopulationData(){
+    	return populationDataReadin;
+    	}
+    
+    /**
+     * Helper method: Returns the total population for a specific ZIP code.
+     *
+     * @param zip ZIP code to filter
+     * @return total population for the ZIP, or 0 if none found
+     */
+    public int getPopulationByZip(String zip) {
+        int total = 0;
+        for (Population p : populationDataReadin) {
+            if (p.getZipCode().equals(zip)) {
+                total += p.getPopulation();
+            }
+        }
+        return total;
+    }
 
 
 }

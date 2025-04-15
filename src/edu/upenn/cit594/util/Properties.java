@@ -1,24 +1,59 @@
 package edu.upenn.cit594.util;
 
+/**
+ * Represents a property record with market value, livable area, and ZIP code.
+ */
 public class Properties {
-    private double market_value;
-    private double total_livable_area;
-    private String zip_code;
-    public Properties(double market_value, double total_livable_area, String zip_code) {
-        this.market_value = market_value;
-        this.total_livable_area = total_livable_area;
-        this.zip_code = zip_code;
+
+    //Private fields for property attributes
+    private double marketValue;        //Market value of the property
+    private double totalLivableArea;   //Total livable square footage
+    private String zipCode;            //5-digit ZIP code
+
+    /**
+     * Constructs a new Properties object with specified market value, livable area, and ZIP code.
+     *
+     * @param marketValue      Market value of the property
+     * @param totalLivableArea Total livable area in square feet
+     * @param zipCode          5-digit ZIP code as a String
+     */
+    public Properties(double marketValue, double totalLivableArea, String zipCode) {
+        this.marketValue = marketValue;
+        this.totalLivableArea = totalLivableArea;
+        this.zipCode = zipCode;
     }
-    public double getMarket_value() {
-        return market_value;
+
+    /**
+     * Getter for market value.
+     * @return the market value of the property
+     */
+    public double getMarketValue() {
+        return marketValue;
     }
-    public double getTotal_livable_area() {
-        return total_livable_area;
+
+    /**
+     * Getter for total livable area.
+     *
+     * @return total livable square footage
+     */
+    public double getTotalLivableArea() {
+        return totalLivableArea;
     }
-    public String getZip_code() {
-        return zip_code;
+
+    /**
+     * Getter for ZIP code.
+     * @return ZIP code as a String
+     */
+    public String getZipCode() {
+        return zipCode;
     }
+
+    /**
+     * Returns a tab-separated string representing this property record.
+     * @return formatted string with ZIP, market value, and livable area
+     */
+    @Override
     public String toString() {
-        return zip_code + "\t" + market_value + "\t" + total_livable_area;
+        return zipCode + "\t" + marketValue + "\t" + totalLivableArea;
     }
 }

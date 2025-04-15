@@ -1,3 +1,5 @@
+package edu.upenn.cit594.testing;
+
 /* Submission file checker for cis594 group project. This program will confirm
  * that your submission file is a zip archive and that Main.java is in the
  * expected location.  This is not an exhaustive check of everything that

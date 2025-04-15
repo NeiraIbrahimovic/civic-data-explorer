@@ -9,22 +9,48 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Reads property data from a CSV file and parses it into a list of Properties objects.
+ * This class supports flexible header indexing and handles basic data validation and cleaning.
+ */
 public class PropertyFileReader {
-    private List<Properties> properties_data_readin = new ArrayList<>();
-    private double market_value;
-    private double total_livable_area;
-    private String zip_code_property;
-    int market_value_index=-1;
-    int total_livable_area_index =-1;
-    int zip_code_property_index=-1;
+	
+	//Stores all successfully parsed property records
+    private List<Properties> propertiesDataReadin = new ArrayList<>();
+    
+    //Temporary variables used while parsing each line
+    private double marketValue;
+    private double totalLivableArea;
+    private String zipCodeProperty;
+    
+    //Header column indices
+    int marketValueIndex = -1;
+    int totalLivableAreaIndex = -1;
+    int zipCodePropertyIndex = -1;
 
-
+    /**
+     * Constructor that loads and parses the property file at initialization.
+     *
+     * @param fileName the path to the property CSV file
+     * @throws IOException if the file can't be read
+     * @throws ParseException if the file can't be parsed correctly (not used here directly)
+     */
     public PropertyFileReader(String fileName) throws IOException, ParseException {
         readFile(fileName);
     }
+    
+    /**
+     * Reads the CSV file and extracts market value, livable area, and ZIP code for each row.
+     * Skips rows with invalid data.
+     *
+     * @param fileName the path to the CSV file
+     * @throws IOException if reading the file fails
+     */
     protected void readFile(String fileName) throws IOException, ParseException {
 
         List<String> fileContents = Files.readAllLines(Path.of(fileName));
+        
+        //Identify header indices
         if (!fileContents.isEmpty()) {
             String headerLine = fileContents.get(0);
             String[] headers = headerLine.split(",");
@@ -32,65 +58,73 @@ public class PropertyFileReader {
             for (int i = 0; i < headers.length; i++) {
                 String header = headers[i].trim();
                 if (header.compareTo("market_value")==0) {
-                    market_value_index = i;
-                }else if (header.compareTo("total_livable_area")==0) {
-                    total_livable_area_index = i;
-                }else if (header.compareTo("zip_code")==0) {
-                    zip_code_property_index = i;
+                    marketValueIndex = i;
+                } else if (header.compareTo("total_livable_area")==0) {
+                    totalLivableAreaIndex = i;
+                } else if (header.compareTo("zip_code")==0) {
+                    zipCodePropertyIndex = i;
 
                 }
 
             }
 
         }
+        
+        //Skip header during iteration
         int i = 0;
         boolean headerline = true;
-        for (String line : fileContents) {  // Read each line
+        
+        //Read each line
+        for (String line : fileContents) {  
             i++;
             if (headerline) {
-                headerline = false;  // Skip the first line
-                continue;  // Skip the rest of the loop body for the first iteration
+            	//Skip the header line
+                headerline = false; 
+                continue;  
             }
 
             try {
-                String[] sections = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)"); // Split by comma
-                zip_code_property = sections[zip_code_property_index].trim();
-               // System.out.println();
-                if (zip_code_property.matches("^\\d{5}.*")) {
-                    zip_code_property = zip_code_property.substring(0, 5);
+            	//Use regex to split by comma while ignoring commas inside quotes
+                String[] sections = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)"); 
+                
+                //Extract and validate zip code
+                zipCodeProperty = sections[zipCodePropertyIndex].trim();
+                if (zipCodeProperty.matches("^\\d{5}.*")) {
+                    zipCodeProperty = zipCodeProperty.substring(0, 5);
 
                 } else {
-                    continue;
+                    continue; //Skip invalid ZIPs
+                    
                     //System.out.println("First 5 characters are NOT all digits." + zip_code_property+ "  " );
                 }
 
-
-                if(!sections[total_livable_area_index].trim().isEmpty()){
+                //Parse total livable area (or default to 0)
+                if(!sections[totalLivableAreaIndex].trim().isEmpty()){
                     try {
 
-                        total_livable_area = Double.parseDouble(sections[total_livable_area_index].trim());
+                        totalLivableArea = Double.parseDouble(sections[totalLivableAreaIndex].trim());
                     } catch (NumberFormatException e) {
-                        System.out.println("error not total_livable_area to int- " + sections[total_livable_area_index]+ "  index:  " + i);
+                        System.out.println("error not total_livable_area to int- " + sections[totalLivableAreaIndex]+ "  index:  " + i);
                         continue;//dont add this row if total libable aread is incorrect.
                     }
-                }else{
-                    total_livable_area = 0;
+                } else{
+                    totalLivableArea = 0;
                 }
 
-                if (!sections[market_value_index].trim().isEmpty()) {
+                //Parse market value (or default to 0)
+                if (!sections[marketValueIndex].trim().isEmpty()) {
                     try {
-                        market_value = Double.parseDouble(sections[market_value_index].trim());
+                        marketValue = Double.parseDouble(sections[marketValueIndex].trim());
                     } catch (NumberFormatException e) {
-                        System.out.println("error not market_value to int- " + sections[market_value_index] + "  index:  " + i);
-                        continue;//dont add this row if market value is incorrect. empty or string
+                        System.out.println("error not market_value to int- " + sections[marketValueIndex] + "  index:  " + i);
+                        continue;	//Skip this row if market value is incorrect (empty or String)
                     }
-                }else{
-                    market_value = 0;
+                } else{
+                    marketValue = 0;
                 }
 
-
-
-                properties_data_readin.add(new Properties( market_value,  total_livable_area,  zip_code_property));
+                //Create a Properties object and add it to the list
+                propertiesDataReadin.add(new Properties( marketValue,  totalLivableArea,  zipCodeProperty));
 
             } catch (NumberFormatException e) {
                 System.out.println("Error parsing");
@@ -98,14 +132,56 @@ public class PropertyFileReader {
                 System.out.println("Unexpected error parsing line");
             }
         }
-        //uncomment to see the size that it read in after all the filter
-       // System.out.println(getProperties_data_readin());
-//        System.out.println("total i: " + i);
-//        System.out.println("Properties size: "+getProperties_data_readin().size());
-//        System.out.println("zip_code_property_index: "+zip_code_property_index);
-//        System.out.println("market_value_index: "+market_value_index);
-//        System.out.println("total_livable_area_index: "+total_livable_area_index);
+        	
+        // Optional debug logs:uncomment to see the size that it read in after all the filter
+        // System.out.println(getPropertiesDataReadin());
+        // System.out.println("total i: " + i);
+        // System.out.println("Properties size: " + getPropertiesDataReadin().size());
+        // System.out.println("zipCodePropertyIndex: " + zipCodePropertyIndex);
+        // System.out.println("marketValueIndex: " + marketValueIndex);
+        // System.out.println("totalLivableAreaIndex: " + totalLivableAreaIndex);
 
     }
-    public List<Properties> getProperties_data_readin() {return properties_data_readin;}
+    
+    /**
+     * Returns the list of all property records that were parsed from the file.
+     * @return a list of Properties objects
+     */
+    public List<Properties> getPropertyData(){
+    	return propertiesDataReadin;
+    	}
+    
+    /**
+     * Helper method: Retrieves all market values for properties in a given ZIP code.
+     * Ignores zero or missing values.
+     *
+     * @param zip the ZIP code to filter by
+     * @return list of market values for the ZIP code
+     */
+    public List<Double> getMarketValuesByZip(String zip) {
+        List<Double> values = new ArrayList<>();
+        for (Properties p : propertiesDataReadin) {
+            if (p.getZipCode().equals(zip) && p.getMarketValue() > 0) {
+                values.add(p.getMarketValue());
+            }
+        }
+        return values;
+    }
+
+    /**
+     * Helper method: Retrieves all livable areas for properties in a given ZIP code.
+     * Ignores zero or missing values.
+     *
+     * @param zip the ZIP code to filter by
+     * @return list of livable areas for the ZIP code
+     */
+    public List<Double> getLivableAreasByZip(String zip) {
+        List<Double> areas = new ArrayList<>();
+        for (Properties p : propertiesDataReadin) {
+            if (p.getZipCode().equals(zip) && p.getTotalLivableArea() > 0) {
+                areas.add(p.getTotalLivableArea());
+            }
+        }
+        return areas;
+    }
 }
