@@ -71,7 +71,6 @@ public class Main {
         ProcessorPropertyStats propStats = new ProcessorPropertyStats(propertyFileReader);
         ZipCodeDataAggregator aggregator = new ZipCodeDataAggregator(covidFileReader, propertyFileReader, populationFileReader);
 
-        AvailableActionsPrinter action1 = new AvailableActionsPrinter();
         TotalPopulationAllZip action2 = new TotalPopulationAllZip(popStats);
         TotalVaccPerCapitaForZipForDate action3 = new TotalVaccPerCapitaForZipForDate(vaccStats);
         AvgMarketValueInZip action4 = new AvgMarketValueInZip(propStats);
@@ -92,7 +91,7 @@ public class Main {
                     ScannerManager.closeScanner();
                     return;
                 case 1:
-                    action1.printMenu(populationFileReader, covidFileReader, propertyFileReader);
+                    MainMenu.printMenu();
                     break;
                 case 2:
                 	if (covidFileReader != null && populationFileReader != null) {
