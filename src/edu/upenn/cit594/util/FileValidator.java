@@ -24,9 +24,24 @@ public class FileValidator {
         String propFile = argMap.get("properties");
         String popFile = argMap.get("population");
 
+
         //Return true only if all provided file extensions are valid
-        return (covidFile.endsWith(".json") || covidFile.endsWith(".csv")) //COVID: JSON or CSV
-            && propFile.endsWith(".csv") //Properties: must be CSV
-            && popFile.endsWith(".csv"); //Population: must be CSV
+        //COVID: JSON or CSV
+        if (covidFile == null ||
+                !(covidFile.endsWith(".json") || covidFile.endsWith(".csv"))) {
+            return false;
+        }
+
+        //Properties: must be CSV
+        if (propFile != null && !propFile.endsWith(".csv")) {
+            return false;
+        }
+
+        //Population: must be CSV
+        if (popFile != null && !popFile.endsWith(".csv")) {
+            return false;
+        }
+
+        return true;
     }
 }

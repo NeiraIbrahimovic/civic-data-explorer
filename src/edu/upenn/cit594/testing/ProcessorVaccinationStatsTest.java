@@ -20,18 +20,18 @@ public class ProcessorVaccinationStatsTest {
         Map<String, Integer> populationByZip = new HashMap<>();
 
         //Setup test data for ZIP 19104
-        CovidData data1 = new CovidData("2021-04-01T00:00:00", "19104", 100, 50);
-        CovidData data2 = new CovidData("2021-04-02T00:00:00", "19104", 120, 60);
+        CovidData data1 = new CovidData("19104","2021-04-01T00:00:00",  100, 50);
+        CovidData data2 = new CovidData("19104","2021-04-02T00:00:00",  120, 60);
         covidDataByZip.put("19104", Arrays.asList(data1, data2));
         populationByZip.put("19104", 200);
 
         //Setup test data for ZIP 19103 (no matching date)
-        CovidData data3 = new CovidData("2021-03-31T00:00:00", "19103", 80, 40);
+        CovidData data3 = new CovidData("19103","2021-03-31T00:00:00",  80, 40);
         covidDataByZip.put("19103", List.of(data3));
         populationByZip.put("19103", 100);
 
         //ZIP 19102 exists but has no population
-        CovidData data4 = new CovidData("2021-04-01T00:00:00", "19102", 70, 30);
+        CovidData data4 = new CovidData("19102", "2021-04-01T00:00:00", 70, 30);
         covidDataByZip.put("19102", List.of(data4));
         //No entry in populationByZip for 19102
 

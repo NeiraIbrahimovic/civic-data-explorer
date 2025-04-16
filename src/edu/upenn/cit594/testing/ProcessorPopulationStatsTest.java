@@ -17,7 +17,7 @@ public class ProcessorPopulationStatsTest {
     @BeforeEach
     public void setup() throws IOException, ParseException {
     	//Update with your own file path
-        PopulationFileReader reader = new PopulationFileReader("../CIT5940_Final_Project_testFiles/src/edu/upenn/cit594/testing/population.csv");
+        PopulationFileReader reader = new PopulationFileReader("/Users/edwardfu/Documents/School/CIT594/CIT5940-Final-Project/population.csv");
         processor = new ProcessorPopulationStats(reader);
     }
 

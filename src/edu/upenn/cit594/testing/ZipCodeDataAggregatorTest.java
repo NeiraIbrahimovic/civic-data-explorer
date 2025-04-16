@@ -19,9 +19,9 @@ public class ZipCodeDataAggregatorTest {
     @BeforeEach
     public void setup() throws IOException, ParseException {
     	//Update file paths with your own test files
-        CovidFileReader covidReader = new CSVDataFileReader("../CIT5940_Final_Project_testFiles/src/edu/upenn/cit594/testing/covid_data.csv");
-        PropertyFileReader propReader = new PropertyFileReader("../CIT5940_Final_Project_testFiles/src/edu/upenn/cit594/testing/properties.csv");
-        PopulationFileReader popReader = new PopulationFileReader("../CIT5940_Final_Project_testFiles/src/edu/upenn/cit594/testing/population.csv");
+        CovidFileReader covidReader = new CSVDataFileReader("/Users/edwardfu/Documents/School/CIT594/CIT5940-Final-Project/covid_data.csv");
+        PropertyFileReader propReader = new PropertyFileReader("/Users/edwardfu/Documents/School/CIT594/CIT5940-Final-Project/properties.csv");
+        PopulationFileReader popReader = new PopulationFileReader("/Users/edwardfu/Documents/School/CIT594/CIT5940-Final-Project/population.csv");
         aggregator = new ZipCodeDataAggregator(covidReader, propReader, popReader);
     }
 
@@ -41,7 +41,7 @@ public class ZipCodeDataAggregatorTest {
     public void testMemoizationReturnsCachedResult() {
         int first = aggregator.getTotalMarketValuePerCapita("19104");
         int second = aggregator.getTotalMarketValuePerCapita("19104");
-        assertSame(first, second, "Should return cached result on second call");
+        assertEquals(first, second, "Should return cached result on second call");
     }
 
     @Test

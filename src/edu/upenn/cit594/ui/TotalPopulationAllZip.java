@@ -26,7 +26,6 @@ public class TotalPopulationAllZip {
      */
     public void execute() {
         int totalPopulation = processor.getTotalPopulationAllZipCodes();
-
         System.out.println("BEGIN OUTPUT");
         System.out.println(totalPopulation);
         System.out.println("END OUTPUT");

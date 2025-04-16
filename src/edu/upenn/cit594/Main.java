@@ -16,7 +16,6 @@ public class Main {
 
     //Entry point of the application. Initializes input, file readers, processors, and menu.
     public static void main(String[] args) {
-    	
         //Define valid argument names the program can accept.
         Set<String> validArgs = Set.of("covid", "properties", "population", "log");
         
@@ -88,7 +87,7 @@ public class Main {
                 case 0:
                     System.out.println("Exiting program.");
                     //Close scanner at program exit. Safe if ScannerManager handles repeated close calls.
-                    ScannerManager.closeScanner();
+                    //ScannerManager.closeScanner();
                     return;
                 case 1:
                     MainMenu.printMenu();
@@ -142,5 +141,6 @@ public class Main {
             System.out.println();
         }
     }
+
 }
 

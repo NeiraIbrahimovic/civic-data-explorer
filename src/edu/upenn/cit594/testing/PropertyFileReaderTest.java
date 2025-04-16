@@ -18,7 +18,7 @@ public class PropertyFileReaderTest {
     @BeforeEach
     //Update this with your file path
     public void setup() throws IOException, ParseException {
-        reader = new PropertyFileReader("../CIT5940_Final_Project_testFiles/src/edu/upenn/cit594/testing/properties.csv");
+        reader = new PropertyFileReader("/Users/edwardfu/Documents/School/CIT594/CIT5940-Final-Project/properties.csv");
     }
 
     @Test

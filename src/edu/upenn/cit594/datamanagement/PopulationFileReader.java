@@ -17,18 +17,18 @@ import java.util.List;
  * The file is expected to have a header with "zip_code" and "population" columns.
  */
 public class PopulationFileReader {
-	
+
 	//List to store successfully parsed population records
     private List<Population> populationDataReadin = new ArrayList<>();
-    
+
     //Temporary holders for values as we read each line
     private int population;
     private String zipCodePopulation;
-    
+
     //Column indices for the headers
     int populationIndex = -1;
     int zipCodePopulationIndex = -1;
-    
+
     /**
      * Constructor that reads and parses the given CSV file immediately.
      *
@@ -39,7 +39,7 @@ public class PopulationFileReader {
     public PopulationFileReader(String fileName) throws IOException, ParseException {
         readFile(fileName);
     }
-    
+
     /**
      * Reads the CSV file and extracts ZIP code + population data.
      * Skips malformed or invalid rows.
@@ -58,29 +58,29 @@ public class PopulationFileReader {
                 header = header.replace("\"", "");
                 if (header.compareTo("population")==0) {
                     populationIndex = i;
-                }else if (header.compareTo("zipCode")==0) {
+                }else if (header.compareTo("zip_code")==0) {
                     zipCodePopulationIndex = i;
                 }
 
             }
             //Debug prints (can remove)
-            //System.out.println("populationIndex: " + populationIndex);
-            //System.out.println("zipCodePopulationIndex: " + zipCodePopulationIndex);
+//            System.out.println("populationIndex: " + populationIndex);
+//            System.out.println("zipCodePopulationIndex: " + zipCodePopulationIndex);
         }
         boolean headerline = true;
 
         //Read data lines one by one
-        for (String line : fileContents) {  
+        for (String line : fileContents) {
             if (headerline) {
             	//Skip the header line
-                headerline = false;  
-                continue;  
+                headerline = false;
+                continue;
             }
 
             try {
 
                 String[] sections = line.split(","); //Split by comma
-                
+
                 //Extract and clean the ZIP code
                 zipCodePopulation = sections[zipCodePopulationIndex].trim().replace("\"", "");;
 
@@ -111,15 +111,16 @@ public class PopulationFileReader {
             } catch (NumberFormatException e) {
                 System.out.println("Error parsing");
             } catch (Exception e) {
-                System.out.println("Unexpected error parsing line");
+
+                System.out.println("Unexpected Population error parsing line: " + e.getMessage() + ": "+ line);
             }
         }
         // Optional debug output: uncomment to see the size that it read in after all the filter
-        // System.out.println(getPropertyData());
-        // System.out.println("total i: " + i);
-        // System.out.println("Properties size: " + getPropertyData().size());
+//         System.out.println(getPropertyData());
+//         System.out.println("total i: " + i);
+//         System.out.println("Properties size: " + getPropertyData().size());
     }
-    
+
     /**
      * Returns the list of all population records that were parsed from the file.
      *
@@ -128,7 +129,7 @@ public class PopulationFileReader {
     public List<Population> getPopulationData(){
     	return populationDataReadin;
     	}
-    
+
     /**
      * Helper method: Returns the total population for a specific ZIP code.
      *

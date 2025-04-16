@@ -40,6 +40,11 @@ public class Logger {
      * If an error occurs while opening the file, logs will fall back to System.err.
      */
     public void setOutput(String filename) {
+        if (filename == null || filename.isEmpty()) {
+            System.err.println("No valid log file path provided");
+            return; // Optionally set a default log file or handle logging differently
+        }
+
         //If we already have a writer (and it isn't System.err), close it
         if (writer != null && writer != new PrintWriter(System.err)) {
             writer.close();

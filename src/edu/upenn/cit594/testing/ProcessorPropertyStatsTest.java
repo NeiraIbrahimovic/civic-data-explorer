@@ -17,7 +17,7 @@ public class ProcessorPropertyStatsTest {
     @BeforeEach
     public void setup() throws IOException, ParseException {
     	//Update with your own file path
-        PropertyFileReader reader = new PropertyFileReader("../CIT5940_Final_Project_testFiles/src/edu/upenn/cit594/testing/properties.csv");
+        PropertyFileReader reader = new PropertyFileReader("/Users/edwardfu/Documents/School/CIT594/CIT5940-Final-Project/properties.csv");
         processor = new ProcessorPropertyStats(reader);
     }
 

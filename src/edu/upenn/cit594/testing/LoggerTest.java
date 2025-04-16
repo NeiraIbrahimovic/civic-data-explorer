@@ -21,7 +21,7 @@ public class LoggerTest {
     @Test
     public void testLogFileWriting() throws IOException {
     	//Update with your own file path
-        String testLogFile = "../CIT5940_Final_Project_testFiles/src/edu/upenn/cit594/testing/test_log.txt";
+        String testLogFile = "/Users/edwardfu/Documents/School/CIT594/CIT5940-Final-Project/log.txt";
         Files.deleteIfExists(new File(testLogFile).toPath());
 
         Logger logger = Logger.getInstance();
@@ -33,9 +33,18 @@ public class LoggerTest {
     }
 
     @Test
+    // I dont think by passing in null will make it fall back to stderr. I created another test below
+    // Not sure if theres a way to handle null right now
     public void testDefaultToSystemErr() {
         Logger logger = Logger.getInstance();
         logger.setOutput(null);
+        assertDoesNotThrow(() -> logger.log("This should go to stderr"));
+    }
+
+    @Test
+    public void testDefaultToSystemErr2() {
+        Logger logger = Logger.getInstance();
+       String invalidFileLocation = "something/that/does/not/exist.txt";
         assertDoesNotThrow(() -> logger.log("This should go to stderr"));
     }
 }

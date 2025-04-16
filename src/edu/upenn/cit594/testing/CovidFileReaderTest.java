@@ -17,7 +17,7 @@ public class CovidFileReaderTest {
     @Test
     public void testCSVReaderLoadsCovidData() throws IOException, ParseException {
     	//Update with your own file path
-        CovidFileReader reader = new CSVDataFileReader("../CIT5940_Final_Project_testFiles/src/edu/upenn/cit594/testing/covid_data.csv");
+        CovidFileReader reader = new CSVDataFileReader("/Users/edwardfu/Documents/School/CIT594/CIT5940-Final-Project/covid_data.csv");
         List<CovidData> data = reader.getCovidData();
         assertFalse(data.isEmpty(), "CSV COVID data should not be empty");
         assertNotNull(data.get(0).getZipcode(), "ZIP code should not be null");
@@ -26,7 +26,7 @@ public class CovidFileReaderTest {
     @Test
     public void testJSONReaderLoadsCovidData() throws IOException, ParseException {
     	//Update with your own file path
-        CovidFileReader reader = new JSONDataFileReader("../CIT5940_Final_Project_testFiles/src/edu/upenn/cit594/testing/covid_data.json");
+        CovidFileReader reader = new JSONDataFileReader("/Users/edwardfu/Documents/School/CIT594/CIT5940-Final-Project/covid_data.json");
         List<CovidData> data = reader.getCovidData();
         assertFalse(data.isEmpty(), "JSON COVID data should not be empty");
         assertNotNull(data.get(0).getZipcode(), "ZIP code should not be null");
@@ -35,7 +35,7 @@ public class CovidFileReaderTest {
     @Test
     public void testInvalidDateOrZipSkipped() throws IOException, ParseException {
     	//Update with your own file path
-        CovidFileReader reader = new CSVDataFileReader("../CIT5940_Final_Project_testFiles/src/edu/upenn/cit594/testing/covid_data.csv");
+        CovidFileReader reader = new CSVDataFileReader("/Users/edwardfu/Documents/School/CIT594/CIT5940-Final-Project/covid_data.csv");
         List<CovidData> data = reader.getCovidData();
         assertTrue(data.stream().noneMatch(d -> d.getZipcode() == null || d.getZipcode().length() != 5),
                 "All ZIP codes should be valid 5-digit strings");

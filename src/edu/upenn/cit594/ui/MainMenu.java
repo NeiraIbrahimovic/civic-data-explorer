@@ -19,6 +19,7 @@ public class MainMenu {
             printMenu(); //Display the menu options
             System.out.print(">  ");
             System.out.flush();
+            //Check if there's a next line
 
             String input = scanner.nextLine().trim();
 

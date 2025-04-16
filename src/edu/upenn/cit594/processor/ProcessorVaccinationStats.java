@@ -56,9 +56,14 @@ public class ProcessorVaccinationStats {
         for (String zip : covidDataByZip.keySet()) {
             List<CovidData> records = covidDataByZip.get(zip);
 
+
+
+
             //Search for the first CovidData record matching the given date
             for (CovidData record : records) {
+
                 if (record.getTimestamp().startsWith(date)) {
+
                     int population = populationByZip.getOrDefault(zip, 0);
                     if (population == 0) break; // skip if no population data
 

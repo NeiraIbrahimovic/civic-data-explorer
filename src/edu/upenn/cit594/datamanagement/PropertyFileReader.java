@@ -49,7 +49,7 @@ public class PropertyFileReader {
     protected void readFile(String fileName) throws IOException, ParseException {
 
         List<String> fileContents = Files.readAllLines(Path.of(fileName));
-        
+
         //Identify header indices
         if (!fileContents.isEmpty()) {
             String headerLine = fileContents.get(0);
@@ -69,24 +69,26 @@ public class PropertyFileReader {
             }
 
         }
-        
+
         //Skip header during iteration
         int i = 0;
         boolean headerline = true;
-        
+
         //Read each line
-        for (String line : fileContents) {  
+        for (String line : fileContents) {
             i++;
+            //System.out.println(i);
             if (headerline) {
             	//Skip the header line
-                headerline = false; 
-                continue;  
+                headerline = false;
+                continue;
             }
 
             try {
+
             	//Use regex to split by comma while ignoring commas inside quotes
-                String[] sections = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)"); 
-                
+                String[] sections = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+
                 //Extract and validate zip code
                 zipCodeProperty = sections[zipCodePropertyIndex].trim();
                 if (zipCodeProperty.matches("^\\d{5}.*")) {
@@ -94,7 +96,7 @@ public class PropertyFileReader {
 
                 } else {
                     continue; //Skip invalid ZIPs
-                    
+
                     //System.out.println("First 5 characters are NOT all digits." + zip_code_property+ "  " );
                 }
 
@@ -129,17 +131,16 @@ public class PropertyFileReader {
             } catch (NumberFormatException e) {
                 System.out.println("Error parsing");
             } catch (Exception e) {
-                System.out.println("Unexpected error parsing line");
+                //System.out.println("line:  " + line);
+                System.out.println("Unexpected Property error parsing line:  " + e.getMessage());
             }
         }
-        	
+
         // Optional debug logs:uncomment to see the size that it read in after all the filter
-        // System.out.println(getPropertiesDataReadin());
-        // System.out.println("total i: " + i);
-        // System.out.println("Properties size: " + getPropertiesDataReadin().size());
-        // System.out.println("zipCodePropertyIndex: " + zipCodePropertyIndex);
-        // System.out.println("marketValueIndex: " + marketValueIndex);
-        // System.out.println("totalLivableAreaIndex: " + totalLivableAreaIndex);
+//         System.out.println("total i: " + i);
+//         System.out.println("zipCodePropertyIndex: " + zipCodePropertyIndex);
+//         System.out.println("marketValueIndex: " + marketValueIndex);
+//         System.out.println("totalLivableAreaIndex: " + totalLivableAreaIndex);
 
     }
     

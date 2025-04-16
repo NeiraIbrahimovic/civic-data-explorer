@@ -22,29 +22,29 @@ import org.junit.Test;
 
 public class BasicTests {
 
-	public static boolean triedToExit = false;
-
-	/*
-	 * Student code should exit by returning from main(), not by calling System.exit
-	 */
-	@Before
-	//public void blockExit() {
-		//System.setSecurityManager(new SecurityManager() {
-			//public void checkExit(int status) {
-				//SecurityException se = new SecurityException("Student code called System.exit");
-				// se.printStackTrace();
-				//throw se;
-			//}
-
-			//public void checkPermission(java.security.Permission perm) {
-			//}
-		//});
-	//}
-
-	@After
-	//public void resetExit() {
-		//System.setSecurityManager(null);
-	//}
+//	public static boolean triedToExit = false;
+//
+//	/*
+//	 * Student code should exit by returning from main(), not by calling System.exit
+//	 */
+//	@Before
+//	public void blockExit() {
+//		System.setSecurityManager(new SecurityManager() {
+//			public void checkExit(int status) {
+//				SecurityException se = new SecurityException("Student code called System.exit");
+//				 se.printStackTrace();
+//				throw se;
+//			}
+//
+//			public void checkPermission(java.security.Permission perm) {
+//			}
+//		});
+//	}
+//
+//	@After
+//	public void resetExit() {
+//		System.setSecurityManager(null);
+//	}
 
 	/*
 	 * Note no safety is provided. This routine is expected to fail with any error
@@ -107,6 +107,7 @@ public class BasicTests {
 		assertTrue("Out does not match format for operation 1", lResults.get(0).matches("^\\d+$"));
 	}
 
+	@Test
 	public List<List<String>> extractResultsMulti(String output) throws Exception {
 		BufferedReader output_reader = new BufferedReader(new StringReader(output));
 		List<List<String>> listOfItems = new ArrayList<>();

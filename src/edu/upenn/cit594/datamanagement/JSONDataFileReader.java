@@ -94,9 +94,9 @@ public class JSONDataFileReader extends CovidFileReader {
         }
 
         //Debug output: uncomment to see the size that it read in after all the filter
-        //System.out.println("size " + covidData.size());
-        //System.out.println("partiallyVaccinatedError " + numPartiallyVaccinatedError);
-        //System.out.println("fullyVaccinatedError" + numFullyVaccinatedError);
+//        System.out.println("size " + covidData.size());
+//        System.out.println("partiallyVaccinatedError " + numPartiallyVaccinatedError);
+//        System.out.println("fullyVaccinatedError" + numFullyVaccinatedError);
 
 
         //Optional: uncomment this to show the entire covid_data read files.

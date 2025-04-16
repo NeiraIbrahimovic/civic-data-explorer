@@ -34,10 +34,10 @@ public class MainMenuTest {
 
         String[] args = {
         		//Update with your own file paths
-            "--covid=../CIT5940_Final_Project_testFiles/src/edu/upenn/cit594/testing/covid_data.csv",
-            "--population=../CIT5940_Final_Project_testFiles/src/edu/upenn/cit594/testing/population.csv",
-            "--properties=../CIT5940_Final_Project_testFiles/src/edu/upenn/cit594/testing/properties.csv",
-            "--log=../CIT5940_Final_Project_testFiles/src/edu/upenn/cit594/testing/test_log.txt"
+            "--covid=/Users/edwardfu/Documents/School/CIT594/CIT5940-Final-Project/covid_data.csv",
+            "--population=/Users/edwardfu/Documents/School/CIT594/CIT5940-Final-Project/population.csv",
+            "--properties=/Users/edwardfu/Documents/School/CIT594/CIT5940-Final-Project/properties.csv",
+            "--log=/Users/edwardfu/Documents/School/CIT594/CIT5940-Final-Project/log.txt"
         };
 
         //Run main
