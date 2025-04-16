@@ -107,7 +107,7 @@ public class BasicTests {
 		assertTrue("Out does not match format for operation 1", lResults.get(0).matches("^\\d+$"));
 	}
 
-	@Test
+	
 	public List<List<String>> extractResultsMulti(String output) throws Exception {
 		BufferedReader output_reader = new BufferedReader(new StringReader(output));
 		List<List<String>> listOfItems = new ArrayList<>();
