@@ -32,7 +32,7 @@ public class BasicTests {
 //		System.setSecurityManager(new SecurityManager() {
 //			public void checkExit(int status) {
 //				SecurityException se = new SecurityException("Student code called System.exit");
-//				 se.printStackTrace();
+//				// se.printStackTrace();
 //				throw se;
 //			}
 //
@@ -45,11 +45,11 @@ public class BasicTests {
 //	public void resetExit() {
 //		System.setSecurityManager(null);
 //	}
-
-	/*
-	 * Note no safety is provided. This routine is expected to fail with any error
-	 * or exception in the student code.
-	 */
+//
+//	/*
+//	 * Note no safety is provided. This routine is expected to fail with any error
+//	 * or exception in the student code.
+//	 */
 	public String runMain(String[] args, String input) throws Exception {
 		PrintStream realout = System.out;
 		InputStream realin = System.in;
@@ -107,7 +107,6 @@ public class BasicTests {
 		assertTrue("Out does not match format for operation 1", lResults.get(0).matches("^\\d+$"));
 	}
 
-	
 	public List<List<String>> extractResultsMulti(String output) throws Exception {
 		BufferedReader output_reader = new BufferedReader(new StringReader(output));
 		List<List<String>> listOfItems = new ArrayList<>();
@@ -144,6 +143,9 @@ public class BasicTests {
 		String result2 = runMain(new String[] { "--covid=covid_data.csv", "--properties=downsampled_properties.csv",
 				"--population=population.csv" }, "3\nfull\n2021-11-05\n0\n");
 
+		System.out.println("RESULT 1:\n" + result1);
+		System.out.println("RESULT 2:\n" + result2);
+
 		Set<String> sResult1 = new HashSet<>(extractResults(result1));
 		Set<String> sResult2 = new HashSet<>(extractResults(result2));
 
@@ -172,6 +174,14 @@ public class BasicTests {
 		for (String act : activities) {
 			mResults2.add(extractResults(runMain(args, act + "\n0\n")));
 		}
+
+		System.out.println("=== BATCH ===");
+		System.out.println(mResults1);
+		System.out.println("=== INDIVIDUAL ===");
+		System.out.println(mResults2);
+
+
+
 		assertTrue("Output differed", mResults1.equals(mResults2));
 		System.out.println("Current memory used (MiB): " + (Runtime.getRuntime().totalMemory() >> 20));
 		System.out.println("Max memory used (MiB): " + (Runtime.getRuntime().maxMemory() >> 20));

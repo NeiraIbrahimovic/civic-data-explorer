@@ -31,8 +31,8 @@ public class AvgMarketValueInZip {
      * 2. Validates the ZIP format
      * 3. Retrieves and prints the average market value
      */
-    public void execute() {
-        Scanner scanner = ScannerManager.getScanner();
+    public void execute(Scanner scanner) {
+
 
         //Prompt the user for a 5-digit ZIP code
         System.out.println("Enter a 5-digit ZIP code:");
@@ -52,7 +52,7 @@ public class AvgMarketValueInZip {
         int avgValue = propStats.getAverageMarketValueInZip(zipCode);
 
         //Print the output
-        System.out.println("BEGIN OUTPUT");
+        System.out.println("\nBEGIN OUTPUT");
         System.out.println(avgValue);
         System.out.println("END OUTPUT");
     }

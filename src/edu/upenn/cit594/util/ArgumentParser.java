@@ -31,24 +31,28 @@ public class ArgumentParser {
 
         //If the provided argument does not match the --name=value format, return an error
         for (String arg : args) {
-            Matcher matcher = pattern.matcher(arg);
-            if (!matcher.matches()) {
-                System.err.println("Error: Invalid argument format: " + arg);
-                return null;
-            }
-            
-            //Assign the name and value from the argument pattern to variables
-            String name = matcher.group("name");
-            String value = matcher.group("value");
-            
-            //Throw an error for duplicate arguments
-            if (!validArgs.contains(name) || argMap.containsKey(name)) {
-                System.err.println("Error: Invalid or duplicate argument: " + name);
-                return null;
-            }
-            
-            //If not a duplicate argument, add the name and value of the argument to the HashMap
-            argMap.put(name, value);
+                Matcher matcher = pattern.matcher(arg);
+                if (!matcher.matches()) {
+                    System.err.println("Error: Invalid argument format: " + arg);
+
+                }
+
+                //Assign the name and value from the argument pattern to variables
+                String name = matcher.group("name");
+                String value = matcher.group("value");
+
+            // Validate that the argument name is in the validArgs set
+                if (!validArgs.contains(name) || argMap.containsKey(name)) {
+                    throw new IllegalArgumentException("Invalid argument name: " + name);
+                }
+
+                //Throw an error for duplicate arguments
+                if (argMap.containsKey(name)) {
+                    throw new IllegalArgumentException("Duplicate argument: " + name);
+                }
+
+                //If not a duplicate argument, add the name and value of the argument to the HashMap
+                argMap.put(name, value);
         }
         return argMap;
     }

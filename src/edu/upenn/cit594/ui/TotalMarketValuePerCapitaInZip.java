@@ -31,8 +31,8 @@ public class TotalMarketValuePerCapitaInZip {
      * 2. Validates input format
      * 3. Computes and displays total market value per capita for that ZIP
      */
-    public void execute() {
-        Scanner scanner = ScannerManager.getScanner();
+    public void execute(Scanner scanner) {
+
 
         //Prompt user to enter a valid 5-digit ZIP code
         System.out.println("Enter a 5-digit ZIP code:");
@@ -52,7 +52,7 @@ public class TotalMarketValuePerCapitaInZip {
         int marketValuePerCapita = aggregator.getTotalMarketValuePerCapita(zipCode);
 
         //Display result in required format
-        System.out.println("BEGIN OUTPUT");
+        System.out.println("\nBEGIN OUTPUT");
         System.out.println(marketValuePerCapita);
         System.out.println("END OUTPUT");
     }

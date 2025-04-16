@@ -27,21 +27,27 @@ public class Main {
 
         //Try reading in each file using the FileLoader class. Throw an exception if there is an error.
         try {
-            covidFileReader = FileLoader.loadCovidReader(argMap.get("covid"));
+            if (argMap.containsKey("covid")) {
+                covidFileReader = FileLoader.loadCovidReader(argMap.get("covid"));
+            }
         } catch (Exception e) {
             System.err.println("Error loading COVID file: " + e.getMessage());
             return;
         }
 
         try {
-            propertyFileReader = FileLoader.loadPropertyReader(argMap.get("properties"));
+            if (argMap.containsKey("properties")) {
+                propertyFileReader = FileLoader.loadPropertyReader(argMap.get("properties"));
+            }
         } catch (Exception e) {
         	System.err.println("Error loading property file: " + e.getMessage());
             return;
         }
 
         try {
-            populationFileReader = FileLoader.loadPopulationReader(argMap.get("population"));
+            if (argMap.containsKey("population")) {
+                populationFileReader = FileLoader.loadPopulationReader(argMap.get("population"));
+            }
         } catch (Exception e) {
         	System.err.println("Error loading population file: " + e.getMessage());
             return;
@@ -54,13 +60,17 @@ public class Main {
         
         // Build COVID and population maps for ProcessorVaccinationStats
         Map<String, List<CovidData>> covidMap = new HashMap<>();
-        for (CovidData data : ((CovidFileReader) covidFileReader).getCovidData()) {
-            covidMap.computeIfAbsent(data.getZipcode(), z -> new ArrayList<>()).add(data);
+        if (covidFileReader != null) {  // Check if covidFileReader is null before iterating
+            for (CovidData data : ((CovidFileReader) covidFileReader).getCovidData()) {
+                covidMap.computeIfAbsent(data.getZipcode(), z -> new ArrayList<>()).add(data);
+            }
         }
 
         Map<String, Integer> popMap = new HashMap<>();
-        for (Population p : ((PopulationFileReader) populationFileReader).getPopulationData()) {
-            popMap.put(p.getZipCode(), p.getPopulation());
+        if (populationFileReader != null) {  // Check if populationFileReader is null before iterating
+            for (Population p : ((PopulationFileReader) populationFileReader).getPopulationData()) {
+                popMap.put(p.getZipCode(), p.getPopulation());
+            }
         }
         
         
@@ -78,7 +88,7 @@ public class Main {
         HealthEquityScoreByZip action7 = new HealthEquityScoreByZip(aggregator);
 
         //Get the shared scanner instance for user input.
-        Scanner scanner = ScannerManager.getScanner();
+        Scanner scanner = new Scanner(System.in);
 
         //Start interactive loop for menu selection.
         while (true) {
@@ -101,35 +111,35 @@ public class Main {
                     break;
                 case 3:
                 	if (covidFileReader != null && populationFileReader != null) {
-                        action3.execute();
+                        action3.execute(scanner);
                     } else {
                         System.out.println("Required data files missing.");
                     }
                     break;
                 case 4:
                 	if (propertyFileReader != null) {
-                        action4.execute();
+                        action4.execute(scanner);
                     } else {
                         System.out.println("Required data files missing.");
                     }
                     break;
                 case 5:
                 	if (propertyFileReader != null) {
-                        action5.execute();
+                        action5.execute(scanner);
                     } else {
                         System.out.println("Required data files missing.");
                     }
                     break;
                 case 6:
                 	 if (propertyFileReader != null && populationFileReader != null) {
-                         action6.execute();
+                         action6.execute(scanner);
                      } else {
                          System.out.println("Required data files missing.");
                      }
                      break;
                 case 7:
                 	if (covidFileReader != null && populationFileReader != null && propertyFileReader != null) {
-                        action7.execute();
+                        action7.execute(scanner);
                     } else {
                         System.out.println("Required data files missing.");
                     }

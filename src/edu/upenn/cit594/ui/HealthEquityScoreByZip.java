@@ -36,8 +36,8 @@ public class HealthEquityScoreByZip {
      * 3. Calls the aggregator to compute scores
      * 4. Prints results in a sorted format
      */
-    public void execute() {
-        Scanner scanner = ScannerManager.getScanner();
+    public void execute(Scanner scanner) {
+
         Logger logger = Logger.getInstance();
 
         //Prompt the user to enter a date for filtering hospitalization data
@@ -53,7 +53,7 @@ public class HealthEquityScoreByZip {
         Map<String, Double> scores = aggregator.getHealthEquityScores(date);
 
         //Sort and display the results
-        System.out.println("BEGIN OUTPUT");
+        System.out.println("\nBEGIN OUTPUT");
         TreeMap<String, Double> sorted = new TreeMap<>(scores); //Use TreeMap because automatically sorts by zip
         for (Map.Entry<String, Double> entry : sorted.entrySet()) {
             System.out.printf("%s %.4f%n", entry.getKey(), entry.getValue());

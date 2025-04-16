@@ -16,12 +16,24 @@ public class MainMenu {
      */
     public static int mainMenu(Scanner scanner) {
         while (true) {
-            printMenu(); //Display the menu options
+            System.out.println("0. Exit the program.");
+            System.out.println("1. Show the available actions (subsection 3.1).");
+            System.out.println("2. Show the total population for all ZIP Codes (subsection 3.2).");
+            System.out.println("3. Show the total vaccinations per capita for each ZIP Code for the specified date (subsection 3.3).");
+            System.out.println("4. Show the average market value for properties in a specified ZIP Code (subsection 3.4).");
+            System.out.println("5. Show the average total livable area for properties in a specified ZIP Code (subsection 3.5).");
+            System.out.println("6. Show the total market value of properties, per capita, for a specified ZIP Code (subsection 3.6).");
+            System.out.println("7. Show the results of your custom feature (subsection 3.7).");
             System.out.print(">  ");
-            System.out.flush();
+
             //Check if there's a next line
 
+            if (!scanner.hasNextLine()) {
+                System.out.println("Input ended unexpectedly.");
+                return 0;
+            }
             String input = scanner.nextLine().trim();
+            System.out.println("User input: " + input);
 
             //Accept only single-digit inputs 0 through 7
             if(input.matches("[0-7]")) {
@@ -31,11 +43,11 @@ public class MainMenu {
             }
         }
     }
-
     /**
      * Prints the list of available actions to the console.
      */
     public static void printMenu() {
+        System.out.println("BEGIN OUTPUT");
         System.out.println("0. Exit the program.");
         System.out.println("1. Show the available actions (subsection 3.1).");
         System.out.println("2. Show the total population for all ZIP Codes (subsection 3.2).");
@@ -44,6 +56,7 @@ public class MainMenu {
         System.out.println("5. Show the average total livable area for properties in a specified ZIP Code (subsection 3.5).");
         System.out.println("6. Show the total market value of properties, per capita, for a specified ZIP Code (subsection 3.6).");
         System.out.println("7. Show the results of your custom feature (subsection 3.7).");
+        System.out.println("END OUTPUT");
     }
 
 }

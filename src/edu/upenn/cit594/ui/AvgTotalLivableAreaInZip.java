@@ -32,9 +32,9 @@ public class AvgTotalLivableAreaInZip {
      * 2. Logs the input
      * 3. Computes and prints the average livable area
      */
-    public void execute() {
+    public void execute(Scanner scanner) {
     	//Get shared Scanner and Logger instances
-    	Scanner scanner = ScannerManager.getScanner();
+
         Logger logger = Logger.getInstance();
 
         String zip = "";
@@ -53,7 +53,7 @@ public class AvgTotalLivableAreaInZip {
         int avgArea = processor.getAverageLivableAreaInZip(zip);
 
         //Print result
-        System.out.println("BEGIN OUTPUT");
+        System.out.println("\nBEGIN OUTPUT");
         System.out.println(avgArea);
         System.out.println("END OUTPUT");
     }

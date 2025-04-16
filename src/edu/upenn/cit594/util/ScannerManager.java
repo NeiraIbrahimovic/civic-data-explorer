@@ -10,18 +10,22 @@ import java.util.Scanner;
 
 public class ScannerManager {
 
-    //Static Scanner instance initialized once and shared throughout the program
-    private static final Scanner scanner = new Scanner(System.in);
+    // Shared instance
+    private static Scanner instance;
 
-    //Private constructor to prevent instantiation of this utility class
+    // Private constructor to prevent instantiation
     private ScannerManager() {}
 
     /**
-     * Returns the shared Scanner instance.
-     * @return the single Scanner object for reading from System.in
+     * Returns the single shared Scanner instance.
+     * If it doesn't exist yet, it will be created.
+     * @return shared Scanner instance
      */
-    public static Scanner getScanner() {
-        return scanner;
+    public static Scanner getInstance() {
+        if (instance == null) {
+            instance = new Scanner(System.in);
+        }
+        return instance;
     }
 
     /**
@@ -30,8 +34,9 @@ public class ScannerManager {
      * Subsequent calls to read from System.in after closing the scanner will throw exceptions.
      */
     public static void closeScanner() {
-        if (scanner != null) {
-            scanner.close();
+        if (instance != null) {
+            instance.close();
+            instance = null;
         }
     }
 }

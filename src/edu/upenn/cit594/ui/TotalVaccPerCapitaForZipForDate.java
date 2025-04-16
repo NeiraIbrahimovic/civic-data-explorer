@@ -2,7 +2,6 @@ package edu.upenn.cit594.ui;
 
 import edu.upenn.cit594.logging.Logger;
 import edu.upenn.cit594.processor.ProcessorVaccinationStats;
-import edu.upenn.cit594.util.ScannerManager;
 
 import java.util.*;
 
@@ -16,7 +15,7 @@ import java.util.*;
 
 public class TotalVaccPerCapitaForZipForDate {
 
-    //Reference to the processor that holds and computes vaccination data
+    // Reference to the processor that holds and computes vaccination data
     protected ProcessorVaccinationStats processor;
 
     /**
@@ -34,10 +33,11 @@ public class TotalVaccPerCapitaForZipForDate {
      * 3. Delegates to the processor to calculate per capita results
      * 4. Prints results in sorted order
      */
-    public void execute() {
-        //Access the shared Scanner instance
-        Scanner scanner = ScannerManager.getScanner();
-        //Get the shared logger instance
+    public void execute(Scanner scanner) {
+        // Create a new Scanner instance directly
+        //Scanner scanner = new Scanner(System.in);
+
+        // Get the shared logger instance
         Logger logger = Logger.getInstance();
 
         // Prompt the user for vaccination type (must be "partial" or "full")
@@ -45,32 +45,59 @@ public class TotalVaccPerCapitaForZipForDate {
         while (!type.equals("partial") && !type.equals("full")) {
             System.out.println("Enter vaccination type (partial/full):");
             System.out.print("> ");
-            System.out.flush();  //Ensure prompt appears before input
-            type = scanner.nextLine().trim().toLowerCase(); //Normalize input
-            logger.log(type); //Log user input
+            //System.out.flush();  // Ensure prompt appears before input
+            try {
+                if (!scanner.hasNextLine()) {
+                    System.out.println("Input ended no next line.");
+                    return;
+                }
+                type = scanner.nextLine().trim().toLowerCase(); // Normalize input
+                logger.log(type); // Log user input
+                if (!type.equals("partial") && !type.equals("full")) {
+                    System.out.println("Invalid input: Please enter 'partial' or 'full'.");
+                }
+            } catch (Exception e) {
+                System.out.println("Error reading input: " + e.getMessage());
+                return;
+            }
         }
 
-        //Prompt the user for the reporting date in YYYY-MM-DD format
+        // Prompt the user for the reporting date in YYYY-MM-DD format
         String date = "";
         while (!date.matches("\\d{4}-\\d{2}-\\d{2}")) {
             System.out.println("Enter date (YYYY-MM-DD):");
             System.out.print("> ");
             System.out.flush();  // Prompt formatting
-            date = scanner.nextLine().trim(); // Capture user input
-            logger.log(date); // Log input
+            try {
+                if (!scanner.hasNextLine()) {
+                    System.out.println("Input ended unexpectedly.");
+                    return;
+                }
+                date = scanner.nextLine().trim(); // Capture user input
+                logger.log(date); // Log input
+                if (!date.matches("\\d{4}-\\d{2}-\\d{2}")) {
+                    System.out.println("Invalid input: Please enter a date in the format YYYY-MM-DD.");
+                }
+            } catch (Exception e) {
+                System.out.println("Error reading input: " + e.getMessage());
+                return;
+            }
         }
 
-        //Delegate to the processor to get per-capita vaccination rates
+        // Delegate to the processor to get per-capita vaccination rates
         Map<String, Double> results = processor.getVaccinationsPerCapitaByZip(date, type);
 
-        //Print results in the required format
-        System.out.println("BEGIN OUTPUT");
-        //Sort ZIPs numerically using TreeMap
+        // Print results in the required format
+        System.out.println("\nBEGIN OUTPUT");
+        // Sort ZIPs numerically using TreeMap
         TreeMap<String, Double> sorted = new TreeMap<>(results);
         for (Map.Entry<String, Double> entry : sorted.entrySet()) {
-            //Print ZIP and per capita value rounded to 4 decimal places
+            // Print ZIP and per capita value rounded to 4 decimal places
             System.out.printf("%s %.4f%n", entry.getKey(), entry.getValue());
         }
         System.out.println("END OUTPUT");
+
+        // Close the scanner when done
+        //scanner.close();
     }
 }
