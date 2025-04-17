@@ -18,7 +18,7 @@ public class PopulationFileReaderTest {
     @BeforeEach
     //Update the file path to point to your file
     public void setup() throws IOException, ParseException {
-        reader = new PopulationFileReader("/Users/edwardfu/Documents/School/CIT594/CIT5940-Final-Project/population.csv");
+        reader = new PopulationFileReader("population.csv");
     }
 
     @Test

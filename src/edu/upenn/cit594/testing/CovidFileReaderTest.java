@@ -17,7 +17,7 @@ public class CovidFileReaderTest {
     @Test
     public void testCSVReaderLoadsCovidData() throws IOException, ParseException {
     	//Update with your own file path
-        CovidFileReader reader = new CSVDataFileReader("/Users/edwardfu/Documents/School/CIT594/CIT5940-Final-Project/covid_data.csv");
+        CovidFileReader reader = new CSVDataFileReader("covid_data.csv");
         List<CovidData> data = reader.getCovidData();
         assertFalse(data.isEmpty(), "CSV COVID data should not be empty");
         assertNotNull(data.get(0).getZipcode(), "ZIP code should not be null");

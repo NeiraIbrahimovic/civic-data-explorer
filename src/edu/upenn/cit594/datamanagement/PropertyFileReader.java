@@ -1,14 +1,17 @@
 package edu.upenn.cit594.datamanagement;
 
 import edu.upenn.cit594.util.Properties;
+import edu.upenn.cit594.util.CharacterReader;
+import edu.upenn.cit594.util.CSVReader;
+import edu.upenn.cit594.util.CSVFormatException;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+
 
 public class PropertyFileReader {
 
@@ -39,66 +42,52 @@ public class PropertyFileReader {
      * @throws IOException if reading the file fails
      */
     protected void readFile(String fileName) throws IOException {
-        try (BufferedReader reader = Files.newBufferedReader(Path.of(fileName))) {
-            String line;
-            boolean headerLine = true;
+        try (CharacterReader charReader = new CharacterReader(fileName)) {
+            CSVReader csvReader = new CSVReader(charReader);
+            String[] header = csvReader.readRow();
 
-            while ((line = reader.readLine()) != null) {
-                if (headerLine) {
-                    String[] headers = line.split(",");
-                    for (int i = 0; i < headers.length; i++) {
-                        String header = headers[i].trim();
-                        if (header.equalsIgnoreCase("market_value")) {
-                            marketValueIndex = i;
-                        } else if (header.equalsIgnoreCase("total_livable_area")) {
-                            totalLivableAreaIndex = i;
-                        } else if (header.equalsIgnoreCase("zip_code")) {
-                            zipCodePropertyIndex = i;
-                        }
-                    }
-                    headerLine = false;
-                    continue;
-                }
-
-                try {
-                    String[] sections = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-
-                    if (sections.length <= Math.max(marketValueIndex,
-                            Math.max(totalLivableAreaIndex, zipCodePropertyIndex))) {
-                        continue;
-                    }
-
-                    String zip = sections[zipCodePropertyIndex].trim();
-                    if (!zip.matches("^\\d{5}.*")) continue;
-                    zip = zip.substring(0, 5);
-
-                    double area = 0;
-                    String areaStr = sections[totalLivableAreaIndex].trim();
-                    if (!areaStr.isEmpty()) {
-                        try {
-                            area = Double.parseDouble(areaStr);
-                        } catch (NumberFormatException e) {
-                            continue;
-                        }
-                    }
-
-                    double value = 0;
-                    String valueStr = sections[marketValueIndex].trim();
-                    if (!valueStr.isEmpty()) {
-                        try {
-                            value = Double.parseDouble(valueStr);
-                        } catch (NumberFormatException e) {
-                            continue;
-                        }
-                    }
-
-                    propertiesDataReadin.add(new Properties(value, area, zip));
-
-                } catch (Exception e) {
-                    // Optional: log or suppress individual line errors
-                    // System.err.println("Line skipped: " + e.getMessage());
-                }
+            if (header == null) {
+                return; // Empty file
             }
+
+            Map<String, Integer> columnIndex = new HashMap<>();
+            for (int i = 0; i < header.length; i++) {
+                columnIndex.put(header[i].trim().toLowerCase(), i);
+            }
+
+            Integer zipIndex = columnIndex.get("zip_code");
+            Integer marketValueIndex = columnIndex.get("market_value");
+            Integer areaIndex = columnIndex.get("total_livable_area");
+
+            if (zipIndex == null || marketValueIndex == null || areaIndex == null) {
+                return; // Required columns not found
+            }
+
+            String[] row;
+            while ((row = csvReader.readRow()) != null) {
+                if (row.length <= Math.max(zipIndex, Math.max(marketValueIndex, areaIndex))) continue;
+
+                String zip = row[zipIndex].trim();
+                if (zip.length() < 5 || !zip.substring(0, 5).matches("\\d{5}")) continue;
+                zip = zip.substring(0, 5);
+
+                double marketValue = parseDoubleSafely(row[marketValueIndex]);
+                double livableArea = parseDoubleSafely(row[areaIndex]);
+
+                Properties p = new Properties(marketValue, livableArea, zip);
+                propertiesDataReadin.add(p);
+            }
+
+        } catch (CSVFormatException e) {
+            System.err.println("CSV format error: " + e.getMessage());
+        }
+    }
+
+    private double parseDoubleSafely(String s) {
+        try {
+            return Double.parseDouble(s.trim());
+        } catch (Exception e) {
+            return -1;
         }
     }
 

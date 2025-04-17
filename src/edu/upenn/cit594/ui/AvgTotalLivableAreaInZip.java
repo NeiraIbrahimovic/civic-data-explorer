@@ -2,7 +2,6 @@ package edu.upenn.cit594.ui;
 
 import edu.upenn.cit594.logging.Logger;
 import edu.upenn.cit594.processor.ProcessorPropertyStats;
-import edu.upenn.cit594.util.ScannerManager;
 
 import java.util.Scanner;
 

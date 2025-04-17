@@ -7,8 +7,6 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
 
-import edu.upenn.cit594.util.ScannerManager;
-
 /**
  * UI class for Feature 7: Health Equity Score.
  * This class handles the user interaction for computing ZIP-based 

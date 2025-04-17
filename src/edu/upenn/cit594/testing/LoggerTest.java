@@ -21,7 +21,7 @@ public class LoggerTest {
     @Test
     public void testLogFileWriting() throws IOException {
     	//Update with your own file path
-        String testLogFile = "/Users/edwardfu/Documents/School/CIT594/CIT5940-Final-Project/log.txt";
+        String testLogFile = "log.txt";
         Files.deleteIfExists(new File(testLogFile).toPath());
 
         Logger logger = Logger.getInstance();
