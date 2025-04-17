@@ -34,7 +34,7 @@ public class ArgumentParser {
                 Matcher matcher = pattern.matcher(arg);
                 if (!matcher.matches()) {
                     System.err.println("Error: Invalid argument format: " + arg);
-
+                    return null;
                 }
 
                 //Assign the name and value from the argument pattern to variables
@@ -42,13 +42,15 @@ public class ArgumentParser {
                 String value = matcher.group("value");
 
             // Validate that the argument name is in the validArgs set
-                if (!validArgs.contains(name) || argMap.containsKey(name)) {
-                    throw new IllegalArgumentException("Invalid argument name: " + name);
+                if (!validArgs.contains(name) ) {
+                    System.err.println("Error: Invalid argument name: " + name);
+                    return null;
                 }
 
                 //Throw an error for duplicate arguments
                 if (argMap.containsKey(name)) {
-                    throw new IllegalArgumentException("Duplicate argument: " + name);
+                    System.err.println("Error: Duplicate argument: " + name);
+                    return null;
                 }
 
                 //If not a duplicate argument, add the name and value of the argument to the HashMap

@@ -18,12 +18,21 @@ public class Main {
     public static void main(String[] args) {
         //Define valid argument names the program can accept.
         Set<String> validArgs = Set.of("covid", "properties", "population", "log");
-        
+
         //First, parse the arguments using the ArgumentParser class. Return null if invalid.
         Map<String, String> argMap = ArgumentParser.parse(args, validArgs);
-        
+
+        if (argMap == null) {
+            System.out.println("Invalid or no arguments provided.");
+            return;
+        }
+
+
+
+
+
         //Next, ensure file extensions are valid (CSV/JSON) using the FileValidator class. Abort if invalid.
-        if (argMap == null || !FileValidator.validate(argMap)) return;
+        if (argMap == null ) return;
 
         //Try reading in each file using the FileLoader class. Throw an exception if there is an error.
         try {
@@ -32,7 +41,8 @@ public class Main {
             }
         } catch (Exception e) {
             System.err.println("Error loading COVID file: " + e.getMessage());
-            return;
+            covidFileReader = null;
+            //return;
         }
 
         try {
@@ -41,7 +51,8 @@ public class Main {
             }
         } catch (Exception e) {
         	System.err.println("Error loading property file: " + e.getMessage());
-            return;
+            propertyFileReader = null;
+            //return;
         }
 
         try {
@@ -50,14 +61,14 @@ public class Main {
             }
         } catch (Exception e) {
         	System.err.println("Error loading population file: " + e.getMessage());
-            return;
+            populationFileReader = null;
+            //return;
         }
 
         //Get the singleton logger instance.
         Logger logger = Logger.getInstance();
         //Set the output of the logs
         logger.setOutput(argMap.get("log"));
-        
         // Build COVID and population maps for ProcessorVaccinationStats
         Map<String, List<CovidData>> covidMap = new HashMap<>();
         if (covidFileReader != null) {  // Check if covidFileReader is null before iterating
@@ -72,27 +83,67 @@ public class Main {
                 popMap.put(p.getZipCode(), p.getPopulation());
             }
         }
-        
+
         
         //Initialize processors and UI action handlers for the features
-        ProcessorVaccinationStats vaccStats = new ProcessorVaccinationStats(covidMap, popMap);
-        ProcessorPopulationStats popStats = new ProcessorPopulationStats(populationFileReader);
-        ProcessorPropertyStats propStats = new ProcessorPropertyStats(propertyFileReader);
-        ZipCodeDataAggregator aggregator = new ZipCodeDataAggregator(covidFileReader, propertyFileReader, populationFileReader);
+        // Processors (initialized only if required data is available)
+        ProcessorVaccinationStats vaccStats = null;
+        ProcessorPopulationStats popStats = null;
+        ProcessorPropertyStats propStats = null;
+        ZipCodeDataAggregator aggregator = null;
 
-        TotalPopulationAllZip action2 = new TotalPopulationAllZip(popStats);
-        TotalVaccPerCapitaForZipForDate action3 = new TotalVaccPerCapitaForZipForDate(vaccStats);
-        AvgMarketValueInZip action4 = new AvgMarketValueInZip(propStats);
-        AvgTotalLivableAreaInZip action5 = new AvgTotalLivableAreaInZip(propStats);
-        TotalMarketValuePerCapitaInZip action6 = new TotalMarketValuePerCapitaInZip(aggregator);
-        HealthEquityScoreByZip action7 = new HealthEquityScoreByZip(aggregator);
+// Actions (initialized only if the corresponding processor is available)
+        TotalPopulationAllZip action2 = null;
+        TotalVaccPerCapitaForZipForDate action3 = null;
+        AvgMarketValueInZip action4 = null;
+        AvgTotalLivableAreaInZip action5 = null;
+        TotalMarketValuePerCapitaInZip action6 = null;
+        HealthEquityScoreByZip action7 = null;
+
+// Initialize individual processors based on available data
+        if (populationFileReader != null) {
+            popStats = new ProcessorPopulationStats(populationFileReader);
+            action2 = new TotalPopulationAllZip(popStats);
+        }
+
+        if (covidFileReader != null && populationFileReader != null) {
+            covidMap = new HashMap<>();
+            for (CovidData data : covidFileReader.getCovidData()) {
+                covidMap.computeIfAbsent(data.getZipcode(), z -> new ArrayList<>()).add(data);
+            }
+
+            popMap = new HashMap<>();
+            for (Population p : populationFileReader.getPopulationData()) {
+                popMap.put(p.getZipCode(), p.getPopulation());
+            }
+
+            vaccStats = new ProcessorVaccinationStats(covidMap, popMap);
+            action3 = new TotalVaccPerCapitaForZipForDate(vaccStats);
+        }
+
+        if (propertyFileReader != null) {
+            propStats = new ProcessorPropertyStats(propertyFileReader);
+            action4 = new AvgMarketValueInZip(propStats);
+            action5 = new AvgTotalLivableAreaInZip(propStats);
+        }
+
+        if (propertyFileReader != null && populationFileReader != null) {
+            aggregator = new ZipCodeDataAggregator(covidFileReader, propertyFileReader, populationFileReader);
+            action6 = new TotalMarketValuePerCapitaInZip(aggregator);
+
+            if (covidFileReader != null) {
+                action7 = new HealthEquityScoreByZip(aggregator);
+            }
+        }
 
         //Get the shared scanner instance for user input.
         Scanner scanner = new Scanner(System.in);
 
+
+
         //Start interactive loop for menu selection.
         while (true) {
-            int choice = MainMenu.mainMenu(scanner);
+            int choice = MainMenu.mainMenu(scanner,covidFileReader,propertyFileReader,populationFileReader);
             switch (choice) {
                 case 0:
                     System.out.println("Exiting program.");
@@ -100,17 +151,17 @@ public class Main {
                     //ScannerManager.closeScanner();
                     return;
                 case 1:
-                    MainMenu.printMenu();
+                    MainMenu.printMenu(covidFileReader,propertyFileReader,populationFileReader);
                     break;
                 case 2:
-                	if (covidFileReader != null && populationFileReader != null) {
+                	if (populationFileReader != null) {
                         action2.execute();
                     } else {
                         System.out.println("Required data files missing.");
                     }
                     break;
                 case 3:
-                	if (covidFileReader != null && populationFileReader != null) {
+                	if (covidFileReader != null) {
                         action3.execute(scanner);
                     } else {
                         System.out.println("Required data files missing.");

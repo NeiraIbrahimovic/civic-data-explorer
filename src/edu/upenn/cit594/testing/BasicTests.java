@@ -175,10 +175,6 @@ public class BasicTests {
 			mResults2.add(extractResults(runMain(args, act + "\n0\n")));
 		}
 
-		System.out.println("=== BATCH ===");
-		System.out.println(mResults1);
-		System.out.println("=== INDIVIDUAL ===");
-		System.out.println(mResults2);
 
 
 

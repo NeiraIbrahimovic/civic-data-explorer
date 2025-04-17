@@ -88,6 +88,7 @@ public class TotalVaccPerCapitaForZipForDate {
         Map<String, Double> results = processor.getVaccinationsPerCapitaByZip(date, type);
 
         // Print results in the required format
+
         System.out.println("\nBEGIN OUTPUT");
         // Sort ZIPs numerically using TreeMap
         TreeMap<String, Double> sorted = new TreeMap<>(results);
