@@ -26,7 +26,6 @@ public class MainMenu {
             Set<String> validOptions = new HashSet<>();
 
             validOptions.add("0");
-
             validOptions.add("1");
 
             if (populationFileReader != null) {
@@ -60,13 +59,17 @@ public class MainMenu {
             System.out.println("7. Show the results of your custom feature (subsection 3.7).");
             System.out.print(">  ");
             System.out.flush();
-            String input = scanner.nextLine().trim();
+            String input = scanner.nextLine();
 
+            if(!input.matches("[0-7]")){
+                System.out.println("Invalid input: Please enter a number between 0 and 7\n");
+                continue;
+            }
             // Accept only inputs that are present in validOptions
             if (validOptions.contains(input)) {
                 return Integer.parseInt(input);
             } else {
-                System.out.println("File missing for this action.");
+                System.out.println("File missing for this action.\n");
             }
         }
 

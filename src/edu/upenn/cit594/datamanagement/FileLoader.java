@@ -19,8 +19,14 @@ public class FileLoader {
      * @throws ParseException if parsing the file contents fails
      */
     public static CovidFileReader loadCovidReader(String path) throws IOException, ParseException {
-        if (path.endsWith(".json")) return new JSONDataFileReader(path);
-        return new CSVDataFileReader(path);
+        if  (path.endsWith(".json")){
+            return new JSONDataFileReader(path);
+        } else if (path.endsWith(".csv")) {
+            return new CSVDataFileReader(path);
+
+        }else {
+            return null;
+        }
     }
 
     /**

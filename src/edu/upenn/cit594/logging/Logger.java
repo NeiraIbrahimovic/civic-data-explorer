@@ -41,7 +41,7 @@ public class Logger {
      */
     public void setOutput(String filename) {
         if (filename == null || filename.isEmpty()) {
-            System.err.println("No valid log file path provided");
+            //System.err.println("No valid log file path provided");
             return; // Optionally set a default log file or handle logging differently
         }
 

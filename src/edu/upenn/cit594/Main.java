@@ -28,10 +28,20 @@ public class Main {
         }
 
 
+
+
+
+        //Next, ensure file extensions are valid (CSV/JSON) using the FileValidator class. Abort if invalid.
+        if (argMap == null ) return;
+
         //Try reading in each file using the FileLoader class. Throw an exception if there is an error.
         try {
             if (argMap.containsKey("covid")) {
                 covidFileReader = FileLoader.loadCovidReader(argMap.get("covid"));
+                if (covidFileReader == null) {
+                    System.out.println("COVID file extension is not csv or json");
+                    return;
+                }
             }
         } catch (Exception e) {
             System.err.println("Error loading COVID file: " + e.getMessage());
@@ -132,6 +142,7 @@ public class Main {
 
         //Get the shared scanner instance for user input.
         Scanner scanner = new Scanner(System.in);
+
 
 
         //Start interactive loop for menu selection.
