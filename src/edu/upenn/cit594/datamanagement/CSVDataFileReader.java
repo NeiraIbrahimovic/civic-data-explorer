@@ -1,5 +1,6 @@
 package edu.upenn.cit594.datamanagement;
 
+import edu.upenn.cit594.logging.Logger;
 import edu.upenn.cit594.util.CovidData;
 
 import java.io.IOException;
@@ -42,6 +43,9 @@ public class CSVDataFileReader extends CovidFileReader {
      */
     @Override
     protected void readFile(String fileName) throws IOException, ParseException {
+        //Log reading the file
+        Logger.getInstance().log(fileName);
+
         List<String> lines = Files.readAllLines(Path.of(fileName));
         if (lines.isEmpty()) return;
 

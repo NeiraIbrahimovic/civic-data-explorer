@@ -17,10 +17,14 @@ public class Logger {
     //Writer object used to write logs
     private PrintWriter writer;
 
+    //Track whether we’re using System.err
+    private boolean usingSystemErr = true; // Track whether we’re using System.err
+
     //Private constructor to enforce singleton pattern
     private Logger() {
         // Default to standard error output
-        writer = new PrintWriter(System.err);
+        writer = new PrintWriter(System.err, true); //auto-flush
+        usingSystemErr = true;
     }
 
     /**
@@ -40,23 +44,27 @@ public class Logger {
      * If an error occurs while opening the file, logs will fall back to System.err.
      */
     public void setOutput(String filename) {
-        if (filename == null || filename.isEmpty()) {
-            //System.err.println("No valid log file path provided");
-            return; // Optionally set a default log file or handle logging differently
-        }
-
         //If we already have a writer (and it isn't System.err), close it
-        if (writer != null && writer != new PrintWriter(System.err)) {
+        if (writer != null && !usingSystemErr) {
             writer.close();
         }
 
+        if (filename == null || filename.isEmpty()) {
+            writer = new PrintWriter(System.err, true);
+            usingSystemErr = true;
+            return;
+        }
+
+
         try {
             //Open file in append mode
-            FileWriter fileWriter = new FileWriter(filename, true);
+            FileWriter fileWriter = new FileWriter(filename, true); //append mode
             writer = new PrintWriter(fileWriter, true); //true = autoFlush
+            usingSystemErr = false;
         } catch (IOException e) {
             //Fall back to stderr if file can't be opened
-            writer = new PrintWriter(System.err);
+            writer = new PrintWriter(System.err, true);
+            usingSystemErr = true;
         }
     }
 
@@ -65,6 +73,11 @@ public class Logger {
      * @param message The message to log (e.g., user input, file opened)
      */
     public void log(String message) {
+        if (writer == null) {
+            writer = new PrintWriter(System.err, true); // fallback if unset
+            usingSystemErr = true;
+        }
+
         long timestamp = System.currentTimeMillis(); //get current system time
         writer.println(timestamp + " " + message);   //write to output
     }

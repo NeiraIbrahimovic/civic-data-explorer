@@ -6,6 +6,7 @@ import edu.upenn.cit594.util.*;
 import edu.upenn.cit594.processor.*;
 import edu.upenn.cit594.logging.Logger;
 
+import java.io.IOException;
 import java.util.*;
 
 public class Main {
@@ -16,10 +17,11 @@ public class Main {
 
     //Entry point of the application. Initializes input, file readers, processors, and menu.
     public static void main(String[] args) {
+
         //Define valid argument names the program can accept.
         Set<String> validArgs = Set.of("covid", "properties", "population", "log");
 
-        //First, parse the arguments using the ArgumentParser class. Return null if invalid.
+        //First, parse the arguments using the ArgumentParser class.
         Map<String, String> argMap = ArgumentParser.parse(args, validArgs);
 
         if (argMap == null) {
@@ -28,11 +30,17 @@ public class Main {
         }
 
 
+        //Set up logging to the specified file
+        if (argMap.containsKey("log")) {
+            Logger.getInstance().setOutput(argMap.get("log"));
+        }
 
-
-
-        //Next, ensure file extensions are valid (CSV/JSON) using the FileValidator class. Abort if invalid.
-        if (argMap == null ) return;
+        //Log command-line arguments at the start
+        StringBuilder argLog = new StringBuilder();
+        for (String value : argMap.values()) {
+            argLog.append(value).append(" ");
+        }
+        Logger.getInstance().log(argLog.toString().trim());
 
         //Try reading in each file using the FileLoader class. Throw an exception if there is an error.
         try {

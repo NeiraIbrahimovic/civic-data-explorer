@@ -1,4 +1,5 @@
 package edu.upenn.cit594.datamanagement;
+import edu.upenn.cit594.logging.Logger;
 import edu.upenn.cit594.util.CovidData;
 
 import java.io.FileReader;
@@ -42,6 +43,9 @@ public class JSONDataFileReader extends CovidFileReader {
      */
     @Override
     protected void readFile(String fileName) throws IOException {
+        //Log reading the file
+        Logger.getInstance().log(fileName);
+
         int numPartiallyVaccinatedError = 0;
         int numFullyVaccinatedError = 0;
 

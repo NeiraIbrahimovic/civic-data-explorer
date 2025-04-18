@@ -1,5 +1,6 @@
 package edu.upenn.cit594.datamanagement;
 
+import edu.upenn.cit594.logging.Logger;
 import edu.upenn.cit594.util.Properties;
 import edu.upenn.cit594.util.CharacterReader;
 import edu.upenn.cit594.util.CSVReader;
@@ -42,6 +43,9 @@ public class PropertyFileReader {
      * @throws IOException if reading the file fails
      */
     protected void readFile(String fileName) throws IOException {
+        //Log that you're reading a file
+        Logger.getInstance().log(fileName);
+
         try (CharacterReader charReader = new CharacterReader(fileName)) {
             CSVReader csvReader = new CSVReader(charReader);
             String[] header = csvReader.readRow();

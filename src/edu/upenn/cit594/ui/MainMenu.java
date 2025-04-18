@@ -3,6 +3,7 @@ package edu.upenn.cit594.ui;
 import edu.upenn.cit594.datamanagement.CovidFileReader;
 import edu.upenn.cit594.datamanagement.PopulationFileReader;
 import edu.upenn.cit594.datamanagement.PropertyFileReader;
+import edu.upenn.cit594.logging.Logger;
 
 import java.util.HashSet;
 import java.util.Scanner;
@@ -60,6 +61,10 @@ public class MainMenu {
             System.out.print(">  ");
             System.out.flush();
             String input = scanner.nextLine();
+
+            //Log the input
+            Logger.getInstance().log(input);
+
 
             if(!input.matches("[0-7]")){
                 System.out.println("Invalid input: Please enter a number between 0 and 7\n");

@@ -1,5 +1,6 @@
 package edu.upenn.cit594.datamanagement;
 
+import edu.upenn.cit594.logging.Logger;
 import edu.upenn.cit594.util.CovidData;
 import edu.upenn.cit594.util.Population;
 import edu.upenn.cit594.util.Properties;
@@ -37,6 +38,9 @@ public class PopulationFileReader {
      * @throws ParseException if parsing fails (not heavily used here)
      */
     public PopulationFileReader(String fileName) throws IOException, ParseException {
+        //Log the file you're reading
+        Logger.getInstance().log(fileName);
+        //Read the file
         readFile(fileName);
     }
 
