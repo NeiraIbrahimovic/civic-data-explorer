@@ -233,8 +233,9 @@ public class CSVReader implements Serializable {
             throw new CSVFormatException("Unescaped quote in the field data");
         }
 
-        //If the field still has data, add the last field to the row
-        if (fieldHasData || field.length() > 0) {
+        // A trailing delimiter introduces an empty final field even at EOF.
+        // Preserve it so column positions match a newline-terminated row.
+        if (hasReadAnyChar) {
             row.add(field.toString());
         }
 
