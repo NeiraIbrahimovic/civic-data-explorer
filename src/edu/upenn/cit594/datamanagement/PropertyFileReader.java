@@ -17,7 +17,7 @@ import java.util.HashMap;
 public class PropertyFileReader {
 
     // Stores all successfully parsed property records
-    private final List<Properties> propertiesDataReadin = new ArrayList<>();  // Presized for large datasets
+    private final List<Properties> propertiesDataReadin = new ArrayList<>();
 
     // Header column indices
     private int marketValueIndex = -1;
@@ -89,7 +89,9 @@ public class PropertyFileReader {
 
     private double parseDoubleSafely(String s) {
         try {
-            return Double.parseDouble(s.trim());
+            double value = Double.parseDouble(s.trim());
+            // NaN and Infinity parse successfully but are not usable values.
+            return Double.isFinite(value) ? value : -1;
         } catch (Exception e) {
             return -1;
         }
