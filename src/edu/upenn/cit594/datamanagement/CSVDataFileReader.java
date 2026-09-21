@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * Reads COVID vaccination data from a CSV file.
  * This implementation handles header-based indexing and quoted field parsing,
- * and is RFC 4180-compliant.
+ * for single-line records. Multiline quoted fields are not supported here.
  */
 public class CSVDataFileReader extends CovidFileReader {
 
@@ -64,6 +64,11 @@ public class CSVDataFileReader extends CovidFileReader {
             else if (header.equals("fully_vaccinated")) fullIndex = i;
         }
 
+        // Missing columns are a file-level input error, not an array-index error.
+        if (zipIndex < 0 || dateIndex < 0 || partialIndex < 0 || fullIndex < 0) {
+            throw new IOException("COVID CSV is missing required columns.");
+        }
+
         //Parse each row, skipping malformed lines
         for (int i = 1; i < lines.size(); i++) {
             String[] fields = parseCSVLine(lines.get(i));
@@ -77,11 +82,16 @@ public class CSVDataFileReader extends CovidFileReader {
             //Validate ZIP and date presence
             if (!zip.matches("\\d{5}") || dateStr.isEmpty()) continue;
             
-            int partialVacc = partial.isEmpty() ? 0 : Integer.parseInt(partial);
-            int fullVacc = full.isEmpty() ? 0 : Integer.parseInt(full);
-
-            //Add parsed data to the list
-            covidData.add(new CovidData(zip, dateStr, partialVacc, fullVacc));
+            // A malformed count must not discard every otherwise valid row.
+            // Empty counts retain the original zero-default convention.
+            try {
+                int partialVacc = partial.isEmpty() ? 0 : Integer.parseInt(partial);
+                int fullVacc = full.isEmpty() ? 0 : Integer.parseInt(full);
+                if (partialVacc < 0 || fullVacc < 0) continue;
+                covidData.add(new CovidData(zip, dateStr, partialVacc, fullVacc));
+            } catch (NumberFormatException e) {
+                continue;
+            }
         }
     }
 
