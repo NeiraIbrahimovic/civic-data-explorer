@@ -87,9 +87,3 @@ Other original integration tests depend on unavailable datasets or machine-speci
 - **Precision:** Several property outputs intentionally truncate to integers to retain the original output contract.
 - **Format support:** The COVID CSV reader supports single-line quoted records, not the complete multiline CSV format.
 - **Scope:** This maintenance pass fixes reproduced defects; it does not certify every input path or make the application production-ready.
-
-## Collaboration and provenance
-
-Original authors: **Edward Fu and Neira Ibrahimovic**. This was a collaborative academic project with assignment starter code. The original source history and team record remain intact. See [AUTHORS.md](AUTHORS.md).
-
-Portfolio documentation, the launcher, synthetic examples, targeted maintenance fixes, and regression tests were prepared with AI assistance. No new license or redistribution permission is asserted for original materials.
