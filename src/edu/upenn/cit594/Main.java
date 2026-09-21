@@ -18,6 +18,13 @@ public class Main {
     //Entry point of the application. Initializes input, file readers, processors, and menu.
     public static void main(String[] args) {
 
+        // A new invocation must not reuse files selected by an earlier call.
+        // This matters for embedding and for tests that invoke main repeatedly.
+        populationFileReader = null;
+        covidFileReader = null;
+        propertyFileReader = null;
+        Logger.getInstance().setOutput(null);
+
         //Define valid argument names the program can accept.
         Set<String> validArgs = Set.of("covid", "properties", "population", "log");
 
@@ -173,7 +180,7 @@ public class Main {
                     }
                     break;
                 case 3:
-                	if (covidFileReader != null) {
+                    if (covidFileReader != null && populationFileReader != null) {
                         action3.execute(scanner);
                     } else {
                         System.out.println("Required data files missing.");
