@@ -32,7 +32,7 @@ public class MainMenu {
             if (populationFileReader != null) {
                 validOptions.add("2");
             }
-            if (covidFileReader != null) {
+            if (covidFileReader != null && populationFileReader != null) {
                 validOptions.add("3");
             }
             if (propertyFileReader != null) {
@@ -60,6 +60,8 @@ public class MainMenu {
             System.out.println("7. Show the results of your custom feature (subsection 3.7).");
             System.out.print(">  ");
             System.out.flush();
+            // Closed or redirected input is a normal exit, not an exception.
+            if (!scanner.hasNextLine()) return 0;
             String input = scanner.nextLine();
 
             //Log the input
@@ -91,7 +93,7 @@ public class MainMenu {
             System.out.println("2");
 
         }
-        if (covidFileReader != null) {
+        if (covidFileReader != null && populationFileReader != null) {
             System.out.println("3");
 
         }
