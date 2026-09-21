@@ -18,6 +18,8 @@ public class ZipCodeDataAggregator {
     protected PopulationFileReader popReader;
     protected CovidFileReader covidReader;
 
+    // Cache assumes the reader data remains unchanged after construction.
+    // Integer truncation preserves the original command-line output contract.
     // Memoization cache for market value per capita
     protected Map<String, Integer> cache = new HashMap<>();
 
@@ -59,7 +61,10 @@ public class ZipCodeDataAggregator {
     /**
      * Computes a health equity score for all ZIP codes using the given date (used in feature 7 UI class).
      * The score is defined as:
-     *     score = hospitalizations / market value per capita
+     *     score = source count / market value per capita
+     * Both supplied readers return fully vaccinated counts through the legacy
+     * hospitalization-named method. This ratio is exploratory, not a validated
+     * hospitalization or health-equity measure.
      * If market value is 0, the score is excluded.
      *
      * @param date The date string (format: YYYY-MM-DD) to filter hospitalization data
