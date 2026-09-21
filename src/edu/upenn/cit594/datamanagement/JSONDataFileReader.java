@@ -52,8 +52,9 @@ public class JSONDataFileReader extends CovidFileReader {
         Object obj = null;
         
         //Attempt to parse JSON file into a JSONArray
-        try {
-            obj = new JSONParser().parse(new FileReader(fileName));
+        // Close the input after parsing, including malformed-JSON failures.
+        try (FileReader input = new FileReader(fileName)) {
+            obj = new JSONParser().parse(input);
         } catch (org.json.simple.parser.ParseException e) {
             throw new RuntimeException(e); //rethrow as unchecked exception
         }
